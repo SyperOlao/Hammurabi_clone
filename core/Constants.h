@@ -1,0 +1,8 @@
+//
+// Created by SyperOlao on 27.09.2025.
+//
+
+#ifndef HAMMURABI_CLONE_CONSTANTS_H
+#define HAMMURABI_CLONE_CONSTANTS_H
+
+#endif //HAMMURABI_CLONE_CONSTANTS_H

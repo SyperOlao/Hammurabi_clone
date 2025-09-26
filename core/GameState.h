@@ -1,0 +1,24 @@
+//
+// Created by SyperOlao on 27.09.2025.
+//
+
+#ifndef HAMMURABI_CLONE_GAMESTATE_H
+#define HAMMURABI_CLONE_GAMESTATE_H
+
+
+struct GameState {
+    int population = 100;
+    int wheat = 2800;
+    int harvest_yield = 0; //урожайность с акра
+    int destroyed_wheat = 0;
+    int land = 1000;
+    int land_price = 0;
+    int years = 1;
+    int deaths = 0;
+    int immigrants = 0;
+    bool plague = false;
+
+};
+
+
+#endif //HAMMURABI_CLONE_GAMESTATE_H
