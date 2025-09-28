@@ -13,4 +13,8 @@ add_executable(Hammurabi_clone main.cpp
         persistence/SaveManager.cpp
         persistence/SaveManager.h
         GameApp.cpp
-        GameApp.h)
+        GameApp.h
+        core/GameLogic.cpp
+        core/GameLogic.h
+        persistence/Validation.cpp
+        persistence/Validation.h)
