@@ -19,4 +19,8 @@ struct GameConsts {
     static constexpr int kWheatMinProcess = 1;
     static constexpr int kWheatMaxProcess = 6;
     static constexpr int kLooseDeathPopulation = 45;
+    static constexpr int kImmigrationDivider = 600;
+    static constexpr int kMaxImmigrantAdd = 50;
+    static constexpr int kPlagueChanceMax = 15;
+    static constexpr int kPlagueDeathPercent = 50;
 };

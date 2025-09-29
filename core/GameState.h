@@ -28,4 +28,10 @@ struct InputState {
 };
 
 
+struct CurrentGameStatistic {
+    int population = 0;
+    int average_death_percent = 0;
+    int lend_for_person = 0;
+};
+
 #endif //HAMMURABI_CLONE_GAMESTATE_H
