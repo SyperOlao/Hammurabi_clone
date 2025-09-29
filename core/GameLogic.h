@@ -8,22 +8,35 @@
 #include <random>
 
 class GameLogic {
-private:
     GameState game_state_;
-    GameState current_game_state_;
+    InputState input_state_;
     std::mt19937 rng_;
+    bool isLoose{false};
+
+    [[nodiscard]] int wheat_consumption_for_population() const;
+
+    int get_wheat_from_land();
+
+    int wheat_after_loss_from_rats();
+
+    void loose_condition_death_more_than_n_population();
 public:
     GameLogic();
 
-    explicit GameLogic(const GameState &game_state);
+    explicit GameLogic(const GameState &game_state, const InputState &input_state);
 
-    int wheat_consumption_for_human() const;
+    void feed_all_population();
 
     int get_current_price_for_land();
 
-    int get_process_land();
+    int max_process_land() const;
 
-    int wheat_consumption_for_land() const;
+    int add_new_immigrates();
+
+
+    void plague_disaster();
+
+    [[nodiscard]] int wheat_consumption_for_land() const;
 
     int next_round();
 };

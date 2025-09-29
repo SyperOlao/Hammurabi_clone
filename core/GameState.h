@@ -20,6 +20,12 @@ struct GameState {
 };
 
 
+struct InputState {
+    int land_for_buy = 0;
+    int land_for_sell = 0;
+    int wheat_for_food = 0;
+    int wheat_for_sow = 0;
+};
 
 
 #endif //HAMMURABI_CLONE_GAMESTATE_H

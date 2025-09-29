@@ -11,7 +11,12 @@
 struct GameConsts {
     static constexpr int kMinPrice = 17;
     static constexpr int kMaxPrice = 26;
-    static constexpr int kMinProcess = 0;
-    static constexpr int kMaxProcess = 10;
-
+    static constexpr int kLandMaxProcess = 10;
+    static constexpr int kMaxGame = 10;
+    static constexpr int kConsumptionOfWheat = 20;
+    static constexpr float kRatsLossMin = 0.0f;
+    static constexpr float kRatsLossMax = 0.07f;
+    static constexpr int kWheatMinProcess = 1;
+    static constexpr int kWheatMaxProcess = 6;
+    static constexpr int kLooseDeathPopulation = 45;
 };
