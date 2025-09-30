@@ -16,5 +16,6 @@ add_executable(Hammurabi_clone main.cpp
         GameApp.h
         core/GameLogic.cpp
         core/GameLogic.h
-        persistence/Validation.cpp
-        persistence/Validation.h)
+        ui/validation/Validation.cpp
+        ui/validation/Validation.h
+        ui/validation/ValidationResult.h)

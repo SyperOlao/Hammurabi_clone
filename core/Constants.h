@@ -5,10 +5,8 @@
 #ifndef HAMMURABI_CLONE_CONSTANTS_H
 #define HAMMURABI_CLONE_CONSTANTS_H
 
-#endif //HAMMURABI_CLONE_CONSTANTS_H
 
-
-struct GameConsts {
+namespace GameConsts {
     static constexpr int kMinPrice = 17;
     static constexpr int kMaxPrice = 26;
     static constexpr int kLandMaxProcess = 10;
@@ -24,3 +22,5 @@ struct GameConsts {
     static constexpr int kPlagueChanceMax = 15;
     static constexpr int kPlagueDeathPercent = 50;
 };
+
+#endif //HAMMURABI_CLONE_CONSTANTS_H

@@ -13,7 +13,7 @@ struct GameState {
     int destroyed_wheat = 0;
     int land = 1000;
     int land_price = 0;
-    int years = 1;
+    int years = 0;
     int deaths = 0;
     int immigrants = 0;
     bool plague = false;
@@ -28,8 +28,7 @@ struct InputState {
 };
 
 
-struct CurrentGameStatistic {
-    int population = 0;
+struct ResultGameStatistic {
     int average_death_percent = 0;
     int lend_for_person = 0;
 };
