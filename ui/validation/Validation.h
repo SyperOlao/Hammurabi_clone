@@ -5,9 +5,11 @@
 #ifndef HAMMURABI_CLONE_VALIDATION_H
 #define HAMMURABI_CLONE_VALIDATION_H
 #include <string>
+#include <unordered_map>
 #include "../../ui/validation/ValidationResult.h"
 
 class Validation {
+    std::unordered_map<std::string, ValidatorFn> rules_;
 public:
     Validation();
     void register_rule(const std::string &key, ValidatorFn fn);

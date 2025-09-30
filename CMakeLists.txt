@@ -18,4 +18,5 @@ add_executable(Hammurabi_clone main.cpp
         core/GameLogic.h
         ui/validation/Validation.cpp
         ui/validation/Validation.h
-        ui/validation/ValidationResult.h)
+        ui/validation/ValidationResult.h
+        utils/Utils.h)
