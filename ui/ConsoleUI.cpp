@@ -68,7 +68,13 @@ void ConsoleUI::startup_message() const {
 
     typewriter(std::string(Color::NEON_YELLOW) +
                "Очень надеюсь, что ваше правление приведет к процветанию нашей страны!" +
-               Color::RESET, 50);
+               Color::RESET);
+}
+
+void ConsoleUI::death_message(GameState game_state) {
+    typewriter(std::string(Color::NEON_RED) +
+           "Вы проиграли у вас умерло более 50% жителей за 1 год, это позор, мой повелитель, я вас изгоняю и займу ваше место!" +
+           Color::RESET);
 }
 
 std::string ConsoleUI::trim(const std::string &s) {
@@ -128,7 +134,7 @@ std::string ConsoleUI::prompt_until_valid(const std::string &field_key, const st
                     << " = " << Color::NEON_GREEN << line << Color::RESET << "\n\n";
             return line;
         }
-        std::cout << Color::NEON_RED << "✖ Ошибка: " << Color::RESET
+        std::cout << Color::ERROR << "✖ Ошибка: " << Color::RESET
                 << Color::NEON_RED << message << Color::RESET << "\n";
         std::this_thread::sleep_for(std::chrono::milliseconds(250));
         std::cout << Color::DIM << "Попробуй ещё раз, но на этот раз внимательнее." << Color::RESET << "\n\n";
@@ -221,7 +227,7 @@ void ConsoleUI::end_game(ResultGameStatistic result) {
         fin << "\n" << Color::NEON_YELLOW << "Итоги подсчёта:" << Color::RESET
             << " P=" << Color::NEON_RED << result.average_death_percent << "%" << Color::RESET
             << "  L=" << Color::NEON_CYAN << result.lend_for_person << Color::RESET << "\n";
-        typewriter(fin.str(), 0);
+        typewriter(fin.str());
     }
 }
 
@@ -241,7 +247,7 @@ InputState ConsoleUI::input_message(InputState input_state) const {
                 << "Популяция=" << Color::NEON_GREEN << gs->population << Color::RESET << "  "
                 << "Пшеница=" << Color::NEON_CYAN << gs->wheat << Color::RESET << "  "
                 << "Количество акров=" << Color::NEON_PURPLE << gs->land << Color::RESET
-                << "  " << Color::DIM << "(Стоимость акра=" << gs->land_price << ")" << Color::RESET << "\n";
+                << "  " << Color::DIM << "(Стоимость акра="<<Color::NEON_BLUE << gs->land_price <<Color::RESET << ")" << Color::RESET << "\n";
         typewriter(hud.str(), 0);
     }
     auto temp_state = *snap;
@@ -411,7 +417,7 @@ void ConsoleUI::show_round_summary_from_repo() const {
 }
 
 void ConsoleUI::render(const GameState &s) const {
-    show_round_summary_from_repo();
+    // show_round_summary_from_repo();
 }
 
 ConsoleUI::~ConsoleUI() {

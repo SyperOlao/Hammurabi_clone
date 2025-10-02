@@ -23,7 +23,8 @@ void GameApp::game_loop() {
 
 
         if (logic_.is_game_over()) {
-            std::cout << "You lost. Exiting loop.\n";
+            ui_.show_round_summary_from_repo();
+            ConsoleUI::death_message(state);
             running_ = false;
             break;
         }
@@ -33,14 +34,15 @@ void GameApp::game_loop() {
             ConsoleUI::end_game(logic_.end_game_results());
             break;
         }
-
+        logic_.get_current_price_for_land();
         InputState input = ui_.input_message({});
 
         ui_.set_last_input(input);
 
         logic_.next_round(input);
-
-        ui_.show_round_summary_from_repo();
+        if (state.years > 1) {
+            ui_.show_round_summary_from_repo();
+        }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(120));
     }

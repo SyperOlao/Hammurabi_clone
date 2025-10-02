@@ -13,6 +13,7 @@ int main() {
     GetConsoleMode(hOut, &dwMode);
     dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
     SetConsoleMode(hOut, dwMode);
+
     GameApp engine;
     engine.start_game();
     engine.game_loop();

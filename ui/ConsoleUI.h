@@ -11,7 +11,7 @@
 
 class ConsoleUI {
 public:
-    ConsoleUI(IGameRepository &repo);
+    explicit ConsoleUI(IGameRepository &repo);
 
     void set_last_input(const InputState &input);
     void set_last_harvest(int harvested_total, int yield_per_acre);
@@ -19,9 +19,8 @@ public:
 
     void startup_message() const;
 
-    void new_round(GameState game_state);
 
-    void death_message(GameState game_state);
+    static void death_message(GameState game_state);
 
     static void end_game(ResultGameStatistic result);
 
@@ -39,7 +38,8 @@ private:
     InputState last_input_;
     int last_harvested_total_ = 0;
     int last_yield_per_acre_ = 0;
-    static void typewriter(const std::string &text, int delay_ms = 40);
+
+    static void typewriter(const std::string &text, int delay_ms = 1);
 
     static std::string prompt_until_valid(const std::string &field_key,
                                       const std::string &label,

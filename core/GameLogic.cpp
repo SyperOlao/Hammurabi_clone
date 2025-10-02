@@ -32,10 +32,14 @@ void GameLogic::feed_all_population(GameState &s) const {
 }
 
 
-int GameLogic::get_current_price_for_land(GameState &s) {
-    std::uniform_int_distribution price_dist(GameConsts::kMinPrice, GameConsts::kMaxPrice);
-    s.land_price = price_dist(rng_);
-    return s.land_price;
+int GameLogic::get_current_price_for_land() {
+    std::uniform_int_distribution<int> price_dist(GameConsts::kMinPrice, GameConsts::kMaxPrice);
+    const int new_price = price_dist(rng_);
+    repo_.update_state([new_price](GameState &s) {
+        s.land_price = new_price;
+    });
+    return new_price;
+
 }
 
 int GameLogic::max_process_land(const GameState &s) {
@@ -131,7 +135,7 @@ void GameLogic::next_round(const InputState &input_state) {
 
             s.years++;
 
-            get_current_price_for_land(s);
+            // get_current_price_for_land(s);
 
             get_wheat_from_land(s);
 

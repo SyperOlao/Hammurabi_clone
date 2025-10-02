@@ -15,7 +15,7 @@ public:
 
     void next_round(const InputState &input_state);
 
-    int get_current_price_for_land(GameState &s);
+    int get_current_price_for_land();
 
     ResultGameStatistic end_game_results();
     [[nodiscard]] bool is_game_over() const;
