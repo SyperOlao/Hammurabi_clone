@@ -13,6 +13,7 @@ struct ValidationResult {
     std::string message;
     static ValidationResult Good() { return {true, ""}; }
     static ValidationResult Bad(const std::string &m) { return {false, m}; }
+
 };
 
 using ValidatorFn = std::function<ValidationResult(const std::string &value, const GameState *state)>;

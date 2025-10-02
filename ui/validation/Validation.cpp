@@ -6,6 +6,7 @@
 #include "../../utils/Utils.h"
 
 Validation::Validation() {
+    const long long KErrorNumber = 1000000000LL;
     register_rule("land_for_buy", [](const std::string &val, const GameState *state)-> ValidationResult {
         long long v;
         if (!Utils::parse_int64(val, v)) return ValidationResult::Bad("Incorrect input: not an integer");
@@ -19,7 +20,7 @@ Validation::Validation() {
             return ValidationResult::Bad(
                 "Incorrect input because you haven't enough wheat");
 
-        if (v > 1000000000LL) return ValidationResult::Bad("Incorrect input: unrealistically large value");
+        if (v > KErrorNumber) return ValidationResult::Bad("Incorrect input: unrealistically large value");
         return ValidationResult::Good();
     });
 
@@ -35,7 +36,7 @@ Validation::Validation() {
             return ValidationResult::Bad(
                 "Incorrect input because you haven't enough sell");
 
-        if (v > 1000000000LL) return ValidationResult::Bad("Incorrect input: unrealistically large value");
+        if (v > KErrorNumber) return ValidationResult::Bad("Incorrect input: unrealistically large value");
         return ValidationResult::Good();
     });
 
@@ -51,7 +52,7 @@ Validation::Validation() {
             return ValidationResult::Bad(
                 "Incorrect input because you haven't enough wheat");
 
-        if (v > 1000000000LL) return ValidationResult::Bad("Incorrect input: unrealistically large value");
+        if (v > KErrorNumber) return ValidationResult::Bad("Incorrect input: unrealistically large value");
         return ValidationResult::Good();
     });
 
@@ -68,7 +69,7 @@ Validation::Validation() {
          return ValidationResult::Bad(
              "Incorrect input because you haven't enough wheat for sow");
 
-     if (v > 1000000000LL) return ValidationResult::Bad("Incorrect input: unrealistically large value");
+     if (v > KErrorNumber) return ValidationResult::Bad("Incorrect input: unrealistically large value");
      return ValidationResult::Good();
  });
 }
