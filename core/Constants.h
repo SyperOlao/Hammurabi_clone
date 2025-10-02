@@ -21,6 +21,7 @@ namespace GameConsts {
     static constexpr int kMaxImmigrantAdd = 50;
     static constexpr int kPlagueChanceMax = 15;
     static constexpr int kPlagueDeathPercent = 50;
+    static constexpr int kWheatConsumptionForLand = 2;
 };
 
 #endif //HAMMURABI_CLONE_CONSTANTS_H

@@ -7,6 +7,12 @@
 
 
 class GameEngine {
+
+    public:
+    GameEngine();
+
+    void start_game();
+
 };
 
 

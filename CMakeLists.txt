@@ -19,4 +19,7 @@ add_executable(Hammurabi_clone main.cpp
         ui/validation/Validation.cpp
         ui/validation/Validation.h
         ui/validation/ValidationResult.h
-        utils/Utils.h)
+        utils/Utils.h
+        core/GameRepository.cpp
+        core/GameRepository.h
+        utils/Color.h)
