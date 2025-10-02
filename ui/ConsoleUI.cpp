@@ -335,12 +335,16 @@ void ConsoleUI::show_round_summary_from_repo() const {
                             std::to_string(state->years) + Color::RESET;
         typewriter(header_line(title), 0);
     }
-
+    std::string plague;
+    if (state->plague) {
+        plague += "и болезни";
+    }
+    plague += '.';
     if (state->deaths > 0) {
         std::ostringstream o;
         o << "  " << Color::NEON_RED << "☠ " << Color::RESET
                 << Color::NEON_YELLOW << state->deaths << Color::RESET
-                << " человек умерли от голода.";
+                << " человек умерли от голода" << plague;
         typewriter(o.str(), 0);
     }
 
