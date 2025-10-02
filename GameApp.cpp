@@ -40,7 +40,7 @@ void GameApp::game_loop() {
         ui_.set_last_input(input);
 
         logic_.next_round(input);
-        if (state.years > 1) {
+        if (state.years >= 1) {
             ui_.show_round_summary_from_repo();
         }
 

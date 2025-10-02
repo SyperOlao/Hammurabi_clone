@@ -29,6 +29,7 @@ public:
 
     void render(const GameState &s) const;
 
+    static void hud(const GameState &s);
     ~ConsoleUI();
 
 private:
@@ -39,7 +40,8 @@ private:
     int last_harvested_total_ = 0;
     int last_yield_per_acre_ = 0;
 
-    static void typewriter(const std::string &text, int delay_ms = 1);
+    static void typewriter(const std::string &text, int delay_ms = 0);
+    static void typewriter_cin(const std::string &text, int delay_ms = 1);
 
     static std::string prompt_until_valid(const std::string &field_key,
                                       const std::string &label,
