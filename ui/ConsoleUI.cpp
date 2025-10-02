@@ -44,6 +44,75 @@ void ConsoleUI::hud(const GameState &s) {
     typewriter(hud.str(), 0);
 }
 
+bool ConsoleUI::prompt_continue_saved_game() {
+    typewriter(std::string(Color::NEON_YELLOW) +
+           "Обнаружено сохранение предыдущей игры!" + Color::RESET, 0);
+    typewriter(std::string(Color::NEON_CYAN) +
+               "Хотите продолжить с того места, где остановились?" + Color::RESET, 0);
+
+    while (true) {
+        typewriter_cin(std::string(Color::NEON_PURPLE) + "» " + Color::RESET +
+                       "Введите " + Color::NEON_GREEN + "y" + Color::RESET + " (да) или " +
+                       Color::NEON_RED + "n" + Color::RESET + " (начать заново): ", 0);
+
+        std::string input;
+        if (!std::getline(std::cin, input)) {
+            std::cout << "\n";
+            input = "n";
+        }
+
+        input = trim(input);
+        if (input.empty()) continue;
+
+        char c = std::tolower(static_cast<unsigned char>(input[0]));
+        if (c == 'y') {
+            std::cout << Color::NEON_GREEN << "✔ Продолжаем предыдущую игру." << Color::RESET << "\n\n";
+            return true;
+        }
+        if (c == 'n') {
+            std::cout << Color::NEON_YELLOW << "⚠ Начинаем новую игру. Старое сохранение будет удалено." << Color::RESET << "\n\n";
+            return false;
+        }
+
+        std::cout << Color::ERROR << "✖ Неверный ввод. Пожалуйста, введите 'y' или 'n'." << Color::RESET << "\n\n";
+        std::this_thread::sleep_for(std::chrono::milliseconds(300));
+    }
+}
+
+bool ConsoleUI::prompt_save_and_exit(const GameState &current_state) {
+    typewriter(std::string("\n") + Color::NEON_YELLOW +
+              "⏸️  Начало нового года. Хотите сохранить прогресс и выйти из игры?" + Color::RESET, 0);
+
+    hud(current_state);
+
+    while (true) {
+        typewriter_cin(std::string(Color::NEON_PURPLE) + "» " + Color::RESET +
+                       "Введите " + Color::NEON_GREEN + "y" + Color::RESET + " (сохранить и выйти) или " +
+                       Color::NEON_CYAN + "n" + Color::RESET + " (продолжить игру): ", 0);
+
+        std::string input;
+        if (!std::getline(std::cin, input)) {
+            std::cout << "\n";
+            input = "n";
+        }
+
+        input = trim(input);
+        if (input.empty()) continue;
+
+        char c = std::tolower(static_cast<unsigned char>(input[0]));
+        if (c == 'y') {
+            std::cout << Color::NEON_GREEN << "\n✔ Игра будет сохранена. До скорой встречи, повелитель!\n" << Color::RESET;
+            return true;
+        } else if (c == 'n') {
+            std::cout << Color::NEON_CYAN << "\n▶ Продолжаем правление...\n" << Color::RESET;
+            return false;
+        }
+
+        std::cout << Color::ERROR << "✖ Пожалуйста, введите 'y' или 'n'." << Color::RESET << "\n\n";
+        std::this_thread::sleep_for(std::chrono::milliseconds(300));
+    }
+}
+
 void ConsoleUI::typewriter_cin(const std::string &text, int delay_ms) {
     for (const char c: text) {
         std::cout << c << std::flush;

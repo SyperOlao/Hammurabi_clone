@@ -6,6 +6,7 @@
 #define HAMMURABI_CLONE_GAMEAPP_H
 #include "core/GameLogic.h"
 #include "core/GameRepository.h"
+#include "persistence/SaveManager.h"
 #include "ui/ConsoleUI.h"
 
 
@@ -20,9 +21,12 @@ private:
     GameRepository repo_;
     GameLogic logic_;
     ConsoleUI ui_;
-
+    SaveManager save_;
     bool running_ = false;
     const int kMaxYears = 10;
+
+    bool try_load_saved_game();
+    bool handle_save_and_exit_if_requested();
 };
 
 
