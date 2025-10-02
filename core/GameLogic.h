@@ -18,6 +18,7 @@ public:
     int get_current_price_for_land(GameState &s);
 
     ResultGameStatistic end_game_results();
+    [[nodiscard]] bool is_game_over() const;
 
 private:
     IGameRepository &repo_;

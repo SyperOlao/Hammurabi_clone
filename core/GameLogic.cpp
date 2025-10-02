@@ -163,3 +163,7 @@ ResultGameStatistic GameLogic::end_game_results() {
     }
     return result_game_statistic_;
 }
+
+bool GameLogic::is_game_over() const {
+    return isLose;
+}

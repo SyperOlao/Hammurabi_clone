@@ -23,7 +23,7 @@ public:
 
     void death_message(GameState game_state);
 
-    void end_game(GameState game_state);
+    static void end_game(ResultGameStatistic result);
 
     [[nodiscard]] InputState input_message(InputState input_state) const;
     void show_round_summary_from_repo() const;
@@ -48,6 +48,7 @@ private:
 
     static std::string trim(const std::string &s);
     static bool str_to_ll(const std::string &s, long long &out);
+
 };
 
 
