@@ -53,16 +53,17 @@ bool ConsoleUI::prompt_continue_saved_game() {
     while (true) {
         typewriter_cin(std::string(Color::NEON_PURPLE) + "» " + Color::RESET +
                        "Введите " + Color::NEON_GREEN + "y" + Color::RESET + " (да) или " +
-                       Color::NEON_RED + "n" + Color::RESET + " (начать заново): ", 0);
+                       Color::NEON_RED + "n/Enter" + Color::RESET + " (начать заново): ", 0);
 
         std::string input;
         if (!std::getline(std::cin, input)) {
-            std::cout << "\n";
             input = "n";
         }
 
         input = trim(input);
-        if (input.empty()) continue;
+        if (input.empty()) {
+            input = "n";
+        }
 
         char c = std::tolower(static_cast<unsigned char>(input[0]));
         if (c == 'y') {
@@ -88,16 +89,18 @@ bool ConsoleUI::prompt_save_and_exit(const GameState &current_state) {
     while (true) {
         typewriter_cin(std::string(Color::NEON_PURPLE) + "» " + Color::RESET +
                        "Введите " + Color::NEON_GREEN + "y" + Color::RESET + " (сохранить и выйти) или " +
-                       Color::NEON_CYAN + "n" + Color::RESET + " (продолжить игру): ", 0);
+                       Color::NEON_CYAN + "n/Enter" + Color::RESET + " (продолжить игру): ", 0);
 
         std::string input;
         if (!std::getline(std::cin, input)) {
-            std::cout << "\n";
+            // std::cout << "\n";
             input = "n";
         }
 
         input = trim(input);
-        if (input.empty()) continue;
+        if (input.empty()) {
+            input = "n";
+        };
 
         char c = std::tolower(static_cast<unsigned char>(input[0]));
         if (c == 'y') {
