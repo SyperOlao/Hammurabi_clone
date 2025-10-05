@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 4.0)
 project(Hammurabi_clone)
 
 set(CMAKE_CXX_STANDARD 20)
-
 add_executable(Hammurabi_clone main.cpp
         core/GameState.h
         core/Constants.h
@@ -20,4 +19,7 @@ add_executable(Hammurabi_clone main.cpp
         utils/Utils.h
         core/GameRepository.cpp
         core/GameRepository.h
-        utils/Color.h)
+        utils/Color.h
+)
+
+target_link_libraries(Hammurabi_clone PRIVATE winmm)

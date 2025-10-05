@@ -16,6 +16,7 @@ struct GameState {
     int land_price = 0;
     int years = 0;
     int deaths = 0;
+    int death_from_starvation = 0;
     int immigrants = 0;
     bool plague = false;
 };
