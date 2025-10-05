@@ -150,11 +150,12 @@ void GameLogic::sell_land(GameState &s) const {
 void GameLogic::buy_land(GameState &s) const {
     int buying_land = input_state_.land_for_buy;
     if (buying_land < 0) return;
-    if (const int max_buying_land = s.wheat * s.land_price; buying_land > max_buying_land) {
+    const int max_buying_land = s.wheat / s.land_price;
+    if (buying_land > max_buying_land) {
         buying_land = max_buying_land;
     }
-    s.wheat -= buying_land;
-    s.land += buying_land / s.land_price;
+    s.wheat -= buying_land * s.land_price;
+    s.land += buying_land;
 }
 
 GameMarkResults GameLogic::get_result_mark() {
@@ -185,6 +186,7 @@ void GameLogic::next_round(const InputState &input_state) {
 
         s.years++;
         buy_land(s);
+
         sell_land(s);
 
         get_wheat_from_land(s);
