@@ -47,6 +47,10 @@ private:
 
     void plague_disaster(GameState &s);
 
+    void sell_land(GameState &s) const;
+
+    void buy_land(GameState &s) const;
+
     [[nodiscard]] static int wheat_consumption_for_land(const GameState &s);
 };
 

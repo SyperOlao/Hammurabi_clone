@@ -4,6 +4,7 @@
 
 #include "../../ui/validation/Validation.h"
 #include "../../utils/Utils.h"
+#include "../../core/Constants.h";
 
 Validation::Validation() {
     const long long KErrorNumber = 1000000000LL;
@@ -68,7 +69,9 @@ Validation::Validation() {
      if (v > static_cast<long long>(state->wheat) * 2 - 1)
          return ValidationResult::Bad(
              "Incorrect input because you haven't enough wheat for sow");
-
+     if (v * GameConsts::kWheatConsumptionForLand > state->land)
+         return ValidationResult::Bad(
+            "Incorrect input because you haven't enough land");
      if (v > KErrorNumber) return ValidationResult::Bad("Incorrect input: unrealistically large value");
      return ValidationResult::Good();
  });

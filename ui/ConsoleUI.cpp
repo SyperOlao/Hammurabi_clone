@@ -454,7 +454,7 @@ void ConsoleUI::show_round_summary_from_repo() const {
 
     {
         std::ostringstream o;
-        o << "  Мы собрали " << Color::NEON_CYAN << harvested_total << Color::RESET
+        o << "  Мы собрали " << Color::NEON_CYAN << state->sow_wheat_land << Color::RESET
                 << " бушелей пшеницы, по " << Color::NEON_CYAN << yield_per_acre << Color::RESET
                 << " бушеля(ей) с акра.";
         typewriter(o.str(), 0);

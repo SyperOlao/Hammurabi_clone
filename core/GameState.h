@@ -11,6 +11,7 @@ struct GameState {
     int wheat = 2800;
     int harvest_yield = 0; // урожайность с акра
     int destroyed_wheat = 0;
+    int sow_wheat_land = 0;
     int land = 1000;
     int land_price = 0;
     int years = 0;
