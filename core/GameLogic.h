@@ -20,7 +20,7 @@ public:
 
     GameMarkResults get_result_mark();
 
-    ResultGameStatistic end_game_results();
+    ResultGameStatistic calculate_end_game_results();
 
     [[nodiscard]] bool is_game_over() const;
 
@@ -31,7 +31,7 @@ private:
     std::mt19937 rng_;
     bool isLose{false};
     int starting_population_{0};
-
+    int temp_average_death_percent{0};
 
     int get_wheat_from_land(GameState &s);
 

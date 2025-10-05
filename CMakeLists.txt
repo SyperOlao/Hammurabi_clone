@@ -28,12 +28,17 @@ target_include_directories(Hammurabi_clone PRIVATE
         ui/sound
 )
 
-# MSVC: корректная кодировка и строгий стандарт
 if (MSVC)
     target_compile_options(Hammurabi_clone PRIVATE /utf-8 /permissive-)
 endif()
 
-# Линкуем winmm только на Windows (MSVC/MinGW)
+
 if (WIN32)
+    add_custom_command(TARGET Hammurabi_clone POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_directory
+            "${CMAKE_SOURCE_DIR}/assets"
+            "$<TARGET_FILE_DIR:Hammurabi_clone>/assets"
+            COMMENT "Copying assets to executable directory..."
+    )
     target_link_libraries(Hammurabi_clone PRIVATE winmm)
 endif()

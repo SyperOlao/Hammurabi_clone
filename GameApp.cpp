@@ -15,7 +15,7 @@ GameApp::GameApp() : repo_(), logic_(repo_), ui_(repo_), sound_() {
 }
 
 void GameApp::start_game() {
-    sound_.play_sound(GameSounds::kStartGame);
+    Sound::play_sound(GameSounds::kStartGame);
     try_load_saved_game();
     running_ = true;
     ui_.startup_message();
@@ -35,8 +35,8 @@ void GameApp::game_loop() {
             ConsoleUI::death_message(state);
             running_ = false;
             SaveManager::remove_save();
-            sound_.play_sound(GameSounds::kGameLoose);
-            std::this_thread::sleep_for(std::chrono::duration<double>(sound_.get_wav_duration(GameSounds::kGameLoose)));
+            Sound::play_sound(GameSounds::kGameLoose);
+            std::this_thread::sleep_for(std::chrono::duration<double>(Sound::get_wav_duration(GameSounds::kGameLoose)));
             return;
         }
 
@@ -46,7 +46,7 @@ void GameApp::game_loop() {
         }
         std::cout <<state.plague<<'\n';
 
-        sound_.play_sound(GameSounds::kNextRound);
+        Sound::play_sound(GameSounds::kNextRound);
 
 
         logic_.get_current_price_for_land();
@@ -58,7 +58,7 @@ void GameApp::game_loop() {
         if (state.years >= 1) {
             ui_.show_round_summary_from_repo();
             if (state.plague) {
-                sound_.play_sound(GameSounds::kPlague);
+                Sound::play_sound(GameSounds::kPlague);
             }
         }
 
@@ -72,16 +72,16 @@ void GameApp::end_game() {
     SaveManager::remove_save();
     switch (mark_results) {
         case Fail:
-            sound_.play_sound(GameSounds::kGameLoose);
+            Sound::play_sound(GameSounds::kGameLoose);
             break;
         case Satisfactorily:
         case Good:
         case Excellent:
-            sound_.play_sound(GameSounds::kGameWin);
+            Sound::play_sound(GameSounds::kGameWin);
             break;
     }
-    ConsoleUI::end_game(logic_.end_game_results(), mark_results);
-    std::this_thread::sleep_for(std::chrono::duration<double>(sound_.get_wav_duration(GameSounds::kGameLoose)));
+    ConsoleUI::end_game(logic_.calculate_end_game_results(), mark_results);
+    std::this_thread::sleep_for(std::chrono::duration<double>(Sound::get_wav_duration(GameSounds::kGameLoose)));
 }
 
 bool GameApp::try_load_saved_game() {

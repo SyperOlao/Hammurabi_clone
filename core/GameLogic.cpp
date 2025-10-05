@@ -116,7 +116,7 @@ void GameLogic::prepare_game_state_after_next_round(GameState &s) {
     if (starting_population_ > 0) {
         const int percent_death_this_year = static_cast<int>(
             (static_cast<long long>(s.deaths) * 100) / starting_population_);
-        result_game_statistic_.average_death_percent += percent_death_this_year;
+        temp_average_death_percent += percent_death_this_year;
     }
     s.population += s.immigrants;
     input_state_ = InputState{};
@@ -159,7 +159,7 @@ void GameLogic::buy_land(GameState &s) const {
 }
 
 GameMarkResults GameLogic::get_result_mark() {
-    const auto [average_death_percent, lend_for_person] = end_game_results();
+    const auto [average_death_percent, lend_for_person] = calculate_end_game_results();
     if (average_death_percent > 33 && lend_for_person < 7) {
         return Fail;
     }
@@ -202,7 +202,7 @@ void GameLogic::next_round(const InputState &input_state) {
     });
 }
 
-ResultGameStatistic GameLogic::end_game_results() {
+ResultGameStatistic GameLogic::calculate_end_game_results() {
     const auto snap = repo_.get_snapshot();
     if (!snap) return result_game_statistic_;
     if (snap->population > 0) {
@@ -212,7 +212,7 @@ ResultGameStatistic GameLogic::end_game_results() {
     }
     if (snap->years > 0) {
         result_game_statistic_.average_death_percent =
-                result_game_statistic_.average_death_percent / snap->years;
+                temp_average_death_percent / snap->years;
     } else {
         result_game_statistic_.average_death_percent = 0;
     }
