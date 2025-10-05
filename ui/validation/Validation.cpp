@@ -66,7 +66,7 @@ Validation::Validation() {
 
      if (!state) return ValidationResult::Good();
 
-     if (v > static_cast<long long>(state->wheat) * 2 - 1)
+     if (v > static_cast<long long>(state->wheat) * 2)
          return ValidationResult::Bad(
              "Incorrect input because you haven't enough wheat for sow");
      if (v * GameConsts::kWheatConsumptionForLand > state->land)
