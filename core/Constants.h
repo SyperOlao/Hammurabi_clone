@@ -20,7 +20,7 @@ namespace GameConsts {
     static constexpr int kImmigrationDivider = 600;
     static constexpr int kMaxImmigrantAdd = 50;
     static constexpr int kPlagueChanceMax = 15;
-    static constexpr int kPlagueDeathPercent = 50;
+    static constexpr int kPlagueDeathPercent = 15;
     static constexpr int kWheatConsumptionForLand = 2;
 };
 
