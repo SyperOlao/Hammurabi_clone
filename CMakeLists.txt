@@ -1,27 +1,39 @@
-cmake_minimum_required(VERSION 4.0)
+cmake_minimum_required(VERSION 3.16)
 project(Hammurabi_clone)
-
+# C++20 строго, без расширений компилятора
 set(CMAKE_CXX_STANDARD 20)
-add_executable(Hammurabi_clone main.cpp
-        core/GameState.h
-        core/Constants.h
-        ui/ConsoleUI.cpp
-        ui/ConsoleUI.h
-        persistence/SaveManager.cpp
-        persistence/SaveManager.h
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+# Исполняемый файл — оставляю старое имя, чтобы было hammurabi.exe
+add_executable(Hammurabi_clone
+        main.cpp
         GameApp.cpp
-        GameApp.h
         core/GameLogic.cpp
-        core/GameLogic.h
-        ui/validation/Validation.cpp
-        ui/validation/Validation.h
-        ui/validation/ValidationResult.h
-        utils/Utils.h
         core/GameRepository.cpp
-        core/GameRepository.h
-        utils/Color.h
+        ui/ConsoleUI.cpp
+        ui/validation/Validation.cpp
+        persistence/SaveManager.cpp
         ui/sound/Sound.cpp
-        ui/sound/Sound.h
 )
 
-target_link_libraries(Hammurabi_clone PRIVATE winmm)
+# Заголовки подключаем через include dirs
+target_include_directories(Hammurabi_clone PRIVATE
+        .
+        core
+        ui
+        ui/validation
+        persistence
+        utils
+        ui/sound
+)
+
+# MSVC: корректная кодировка и строгий стандарт
+if (MSVC)
+    target_compile_options(Hammurabi_clone PRIVATE /utf-8 /permissive-)
+endif()
+
+# Линкуем winmm только на Windows (MSVC/MinGW)
+if (WIN32)
+    target_link_libraries(Hammurabi_clone PRIVATE winmm)
+endif()
