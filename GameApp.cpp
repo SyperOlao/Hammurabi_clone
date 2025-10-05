@@ -69,7 +69,6 @@ void GameApp::game_loop() {
 void GameApp::end_game() {
     running_ = false;
     const auto mark_results = logic_.get_result_mark();
-    ConsoleUI::end_game(logic_.end_game_results(), mark_results);
     SaveManager::remove_save();
     switch (mark_results) {
         case Fail:
@@ -81,6 +80,7 @@ void GameApp::end_game() {
             sound_.play_sound(GameSounds::kGameWin);
             break;
     }
+    ConsoleUI::end_game(logic_.end_game_results(), mark_results);
     std::this_thread::sleep_for(std::chrono::duration<double>(sound_.get_wav_duration(GameSounds::kGameLoose)));
 }
 
