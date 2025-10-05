@@ -86,8 +86,6 @@ bool ConsoleUI::prompt_save_and_exit(const GameState &current_state) {
     typewriter(std::string("\n") + Color::NEON_YELLOW +
                "⏸️  Начало нового года. Хотите сохранить прогресс и выйти из игры?" + Color::RESET, 0);
 
-    hud(current_state);
-
     while (true) {
         typewriter_cin(std::string(Color::NEON_PURPLE) + "» " + Color::RESET +
                        "Введите " + Color::NEON_GREEN + "y" + Color::RESET + " (сохранить и выйти) или " +
@@ -95,7 +93,6 @@ bool ConsoleUI::prompt_save_and_exit(const GameState &current_state) {
 
         std::string input;
         if (!std::getline(std::cin, input)) {
-            // std::cout << "\n";
             input = "n";
         }
 
@@ -336,7 +333,6 @@ void ConsoleUI::end_game(ResultGameStatistic result, GameMarkResults mark_result
 
 InputState ConsoleUI::input_message(InputState input_state) const {
     const auto snap = repo_.get_snapshot();
-    const GameState *gs = snap.get();
 
     Validation validator;
 
@@ -345,8 +341,8 @@ InputState ConsoleUI::input_message(InputState input_state) const {
                Color::RESET + "\n", 0);
 
     auto temp_state = *snap;
-    hud(temp_state);
     long long tmp = 0;
+    hud(temp_state);
     std::string s_buy = prompt_until_valid("land_for_buy", "Купить акров земли", validator, &temp_state);
     str_to_ll(s_buy, tmp);
     long long cost = tmp * temp_state.land_price;
