@@ -3,6 +3,8 @@
 //
 
 #include "ConsoleUI.h"
+
+#include <format>
 #include <iostream>
 #include <sstream>
 #include <thread>
@@ -161,10 +163,13 @@ void ConsoleUI::startup_message() const {
 }
 
 void ConsoleUI::death_message(GameState game_state) {
-    typewriter(std::string(Color::NEON_RED) +
-               "Вы проиграли у вас умерло более 50% жителей за 1 год, это позор, мой повелитель, я вас изгоняю и займу ваше место!"
-               +
-               Color::RESET);
+    const std::string message = std::format(
+       "{}Вы проиграли, у вас умерло более {}% жителей за 1 год. Это позор, мой повелитель! Я вас изгоняю и займу ваше место!{}",
+       Color::NEON_RED,
+       GameConsts::kLooseDeathPopulation,
+       Color::RESET
+   );
+    typewriter(message);
     subtitles();
 }
 
