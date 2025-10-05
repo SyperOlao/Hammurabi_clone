@@ -70,7 +70,7 @@ int GameLogic::get_wheat_from_land(GameState &s) {
     s.harvest_yield = yield_per_acre;
 
     const long long added = static_cast<long long>(min_value) * yield_per_acre;
-    s.sow_wheat_land = added;
+    s.sow_wheat_land = static_cast<int>(added);
     int sow = input_state_.wheat_for_sow;
     if (sow > s.wheat) {
         sow = s.wheat;

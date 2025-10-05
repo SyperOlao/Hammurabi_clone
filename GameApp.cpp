@@ -44,7 +44,6 @@ void GameApp::game_loop() {
             end_game();
             return;
         }
-        std::cout <<state.plague<<'\n';
 
         Sound::play_sound(GameSounds::kNextRound);
 
