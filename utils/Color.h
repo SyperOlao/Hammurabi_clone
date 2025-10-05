@@ -14,6 +14,7 @@ namespace Color {
     constexpr auto NEON_YELLOW = "\033[1;93m";
     constexpr auto NEON_RED = "\033[1;91m";
     constexpr auto DIM = "\033[2m";
+    constexpr auto CYBER_WHITE  = "\033[38;2;230;230;255m";
     constexpr auto CYBERPUNK_PINK   = "\033[1;95m";
 
     constexpr auto ERROR        = "\033[1;91m";

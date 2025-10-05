@@ -20,6 +20,8 @@ add_executable(Hammurabi_clone main.cpp
         core/GameRepository.cpp
         core/GameRepository.h
         utils/Color.h
+        ui/sound/Sound.cpp
+        ui/sound/Sound.h
 )
 
 target_link_libraries(Hammurabi_clone PRIVATE winmm)

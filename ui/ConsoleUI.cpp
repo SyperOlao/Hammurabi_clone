@@ -167,6 +167,7 @@ void ConsoleUI::death_message(GameState game_state) {
                "Вы проиграли у вас умерло более 50% жителей за 1 год, это позор, мой повелитель, я вас изгоняю и займу ваше место!"
                +
                Color::RESET);
+    subtitles();
 }
 
 std::string ConsoleUI::trim(const std::string &s) {
@@ -324,6 +325,7 @@ void ConsoleUI::end_game(ResultGameStatistic result) {
                 << "  L=" << Color::NEON_CYAN << result.lend_for_person << Color::RESET << "\n";
         typewriter(fin.str());
     }
+    subtitles();
 }
 
 InputState ConsoleUI::input_message(InputState input_state) const {
@@ -502,6 +504,19 @@ void ConsoleUI::show_round_summary_from_repo() const {
 
 void ConsoleUI::render(const GameState &s) const {
     // show_round_summary_from_repo();
+}
+
+void ConsoleUI::subtitles() {
+    std::ostringstream fin;
+    fin << std::endl;
+    const auto line = "============================";
+    fin << Color::CYBER_WHITE << line << Color::RESET<<std::endl;
+    fin << Color::CYBER_WHITE <<line << Color::RESET<<std::endl;
+    fin << Color::NEON_BLUE << "Developed by" << " Anna Moklyakova" << Color::RESET;
+    fin << "\n" << Color::NEON_BLUE << "Sound by" << " Konstantin Semenov" << Color::RESET << std::endl;
+    fin << Color::NEON_RED << line << Color::RESET <<std::endl;
+    fin << Color::NEON_RED << line << Color::RESET<<std::endl;
+    typewriter(fin.str(), 0);
 }
 
 

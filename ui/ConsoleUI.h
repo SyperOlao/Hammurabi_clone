@@ -31,6 +31,8 @@ public:
 
     void render(const GameState &s) const;
 
+    static void subtitles();
+
     static void hud(const GameState &s);
 
     static bool prompt_continue_saved_game();
