@@ -44,7 +44,11 @@ void GameApp::game_loop() {
             end_game();
             return;
         }
+        std::cout <<state.plague<<'\n';
+
         sound_.play_sound(GameSounds::kNextRound);
+
+
         logic_.get_current_price_for_land();
         InputState input = ui_.input_message({});
 
@@ -53,6 +57,9 @@ void GameApp::game_loop() {
         logic_.next_round(input);
         if (state.years >= 1) {
             ui_.show_round_summary_from_repo();
+            if (state.plague) {
+                sound_.play_sound(GameSounds::kPlague);
+            }
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(120));
