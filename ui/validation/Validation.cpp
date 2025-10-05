@@ -69,7 +69,7 @@ Validation::Validation() {
      if (v > static_cast<long long>(state->wheat))
          return ValidationResult::Bad(
              "Incorrect input because you haven't enough wheat for sow");
-     if (v * GameConsts::kWheatConsumptionForLand > state->land)
+     if (v / GameConsts::kWheatConsumptionForLand > state->land)
          return ValidationResult::Bad(
             "Incorrect input because you haven't enough land");
      if (v > KErrorNumber) return ValidationResult::Bad("Incorrect input: unrealistically large value");
