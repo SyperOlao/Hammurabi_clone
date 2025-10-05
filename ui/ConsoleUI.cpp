@@ -516,11 +516,11 @@ void ConsoleUI::render(const GameState &s) const {
 void ConsoleUI::subtitles() {
     std::ostringstream fin;
     fin << std::endl;
-    const auto line = "============================";
+    const auto line = "==================================";
     fin << Color::CYBER_WHITE << line << Color::RESET<<std::endl;
     fin << Color::CYBER_WHITE <<line << Color::RESET<<std::endl;
-    fin << Color::NEON_BLUE << "Developed by" << " Anna Moklyakova" << Color::RESET;
-    fin << "\n" << Color::NEON_BLUE << "Sound by" << " Konstantin Semenov" << Color::RESET << std::endl;
+    fin << Color::NEON_BLUE << "Developed    by   " << " Anna Moklyakova" << Color::RESET;
+    fin << "\n" << Color::NEON_BLUE << "Sound and QA by" << " Konstantin Semenov" << Color::RESET << std::endl;
     fin << Color::NEON_RED << line << Color::RESET <<std::endl;
     fin << Color::NEON_RED << line << Color::RESET<<std::endl;
     typewriter(fin.str(), 0);
