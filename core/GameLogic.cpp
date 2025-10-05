@@ -27,7 +27,8 @@ void GameLogic::feed_all_population(GameState &s) const {
         deaths = lack / GameConsts::kConsumptionOfWheat;
         if (deaths > s.population) deaths = s.population;
     }
-    s.deaths = deaths;
+    s.deaths += deaths;
+    s.death_from_starvation = deaths;
     s.population -= deaths;
     if (s.population < 0) s.population = 0;
 }
@@ -49,7 +50,7 @@ int GameLogic::max_process_land(const GameState &s) {
 int GameLogic::add_new_immigrates(GameState &s) {
     assert(GameConsts::kImmigrationDivider != 0);
 
-    int immigrates = s.deaths / 2 + (5 - s.harvest_yield) * s.wheat /
+    int immigrates = s.death_from_starvation / 2 + (5 - s.harvest_yield) * s.wheat /
                      GameConsts::kImmigrationDivider + 1;
     immigrates = std::clamp(immigrates, 0, GameConsts::kMaxImmigrantAdd);
     s.immigrants = immigrates;
@@ -95,7 +96,7 @@ int GameLogic::wheat_after_loss_from_rats(GameState &s) {
 
 void GameLogic::check_loss_condition_by_death_percentage(const GameState &s) {
     if (starting_population_ <= 0) return;
-    const int percent_death = static_cast<int>(static_cast<long long>(s.deaths) * 100 / starting_population_);
+    const int percent_death = static_cast<int>(static_cast<long long>(s.death_from_starvation) * 100 / starting_population_);
     if (percent_death > GameConsts::kLooseDeathPopulation) {
         isLose = true;
     }
@@ -108,6 +109,7 @@ void GameLogic::prepare_game_state_before_next_round(GameState &s) {
     s.destroyed_wheat = 0;
     s.harvest_yield = 0;
     s.sow_wheat_land = 0;
+    s.death_from_starvation = 0;
 }
 
 void GameLogic::prepare_game_state_after_next_round(GameState &s) {
@@ -170,7 +172,6 @@ void GameLogic::next_round(const InputState &input_state) {
         s.years++;
         buy_land(s);
         sell_land(s);
-        // get_current_price_for_land(s);
 
         get_wheat_from_land(s);
 

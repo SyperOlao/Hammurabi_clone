@@ -46,7 +46,7 @@ void ConsoleUI::hud(const GameState &s) {
 
 bool ConsoleUI::prompt_continue_saved_game() {
     typewriter(std::string(Color::NEON_YELLOW) +
-           "Обнаружено сохранение предыдущей игры!" + Color::RESET, 0);
+               "Обнаружено сохранение предыдущей игры!" + Color::RESET, 0);
     typewriter(std::string(Color::NEON_CYAN) +
                "Хотите продолжить с того места, где остановились?" + Color::RESET, 0);
 
@@ -71,7 +71,8 @@ bool ConsoleUI::prompt_continue_saved_game() {
             return true;
         }
         if (c == 'n') {
-            std::cout << Color::NEON_YELLOW << "⚠ Начинаем новую игру. Старое сохранение будет удалено." << Color::RESET << "\n\n";
+            std::cout << Color::NEON_YELLOW << "⚠ Начинаем новую игру. Старое сохранение будет удалено." << Color::RESET
+                    << "\n\n";
             return false;
         }
 
@@ -82,7 +83,7 @@ bool ConsoleUI::prompt_continue_saved_game() {
 
 bool ConsoleUI::prompt_save_and_exit(const GameState &current_state) {
     typewriter(std::string("\n") + Color::NEON_YELLOW +
-              "⏸️  Начало нового года. Хотите сохранить прогресс и выйти из игры?" + Color::RESET, 0);
+               "⏸️  Начало нового года. Хотите сохранить прогресс и выйти из игры?" + Color::RESET, 0);
 
     hud(current_state);
 
@@ -104,7 +105,8 @@ bool ConsoleUI::prompt_save_and_exit(const GameState &current_state) {
 
         char c = std::tolower(static_cast<unsigned char>(input[0]));
         if (c == 'y') {
-            std::cout << Color::NEON_GREEN << "\n✔ Игра будет сохранена. До скорой встречи, повелитель!\n" << Color::RESET;
+            std::cout << Color::NEON_GREEN << "\n✔ Игра будет сохранена. До скорой встречи, повелитель!\n" <<
+                    Color::RESET;
             return true;
         } else if (c == 'n') {
             std::cout << Color::NEON_CYAN << "\n▶ Продолжаем правление...\n" << Color::RESET;
@@ -334,9 +336,8 @@ InputState ConsoleUI::input_message(InputState input_state) const {
                "Время принимать решения, повелитель. Введите значения для хода." +
                Color::RESET + "\n", 0);
 
-    hud(*gs);
-
     auto temp_state = *snap;
+    hud(temp_state);
     long long tmp = 0;
     std::string s_buy = prompt_until_valid("land_for_buy", "Купить акров земли", validator, &temp_state);
     str_to_ll(s_buy, tmp);
@@ -407,16 +408,19 @@ void ConsoleUI::show_round_summary_from_repo() const {
                             std::to_string(state->years) + Color::RESET;
         typewriter(header_line(title), 0);
     }
-    std::string plague;
-    if (state->plague) {
-        plague += "и болезни";
-    }
-    plague += '.';
-    if (state->deaths > 0) {
+
+    if (state->death_from_starvation > 0) {
         std::ostringstream o;
         o << "  " << Color::NEON_RED << "☠ " << Color::RESET
-                << Color::NEON_YELLOW << state->deaths << Color::RESET
-                << " человек умерли от голода" << plague;
+                << Color::NEON_YELLOW << state->death_from_starvation << Color::RESET
+                << " человек умерли от голода." << std::endl;
+        typewriter(o.str(), 0);
+    }
+    if (state->plague) {
+        std::ostringstream o;
+        o << "  " << Color::NEON_RED << "☠ " << Color::RESET
+                << Color::NEON_YELLOW << std::to_string(state->deaths) << Color::RESET
+                << " всего человек умерло.";
         typewriter(o.str(), 0);
     }
 
@@ -443,19 +447,10 @@ void ConsoleUI::show_round_summary_from_repo() const {
         o << "  Население сейчас: " << Color::NEON_GREEN << state->population << Color::RESET << " человек.";
         typewriter(o.str(), 0);
     }
-
-
-    int harvested_total = last_harvested_total_;
-    int yield_per_acre = last_yield_per_acre_;
-    if (harvested_total == 0 && yield_per_acre == 0) {
-        yield_per_acre = state->harvest_yield;
-        harvested_total = yield_per_acre * 0;
-    }
-
     {
         std::ostringstream o;
         o << "  Мы собрали " << Color::NEON_CYAN << state->sow_wheat_land << Color::RESET
-                << " бушелей пшеницы, по " << Color::NEON_CYAN << yield_per_acre << Color::RESET
+                << " бушелей пшеницы, по " << Color::NEON_CYAN << state->harvest_yield << Color::RESET
                 << " бушеля(ей) с акра.";
         typewriter(o.str(), 0);
     }

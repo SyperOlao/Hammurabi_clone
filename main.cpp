@@ -27,7 +27,7 @@ fs::path find_sound_upwards(const std::wstring& rel) {
     return {};
 }
 
-int main() {
+void app_settings() {
     SetConsoleOutputCP(CP_UTF8);
     SetConsoleCP(CP_UTF8);
     const HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -35,6 +35,10 @@ int main() {
     GetConsoleMode(hOut, &dwMode);
     dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
     SetConsoleMode(hOut, dwMode);
+}
+
+int main() {
+    app_settings();
 
     auto sound = find_sound_upwards(L"assets\\sound3.wav");
     if (sound.empty()) {
