@@ -7,13 +7,15 @@
 #include <iostream>
 #include <thread>
 
+#include "core/Constants.h"
 #include "utils/Color.h"
 
-GameApp::GameApp() : repo_(), logic_(repo_), ui_(repo_) {
+GameApp::GameApp() : repo_(), logic_(repo_), ui_(repo_), sound_() {
 
 }
 
 void GameApp::start_game() {
+    sound_.play_sound(GameSounds::kStartGame);
     try_load_saved_game();
     running_ = true;
     ui_.startup_message();
@@ -33,15 +35,16 @@ void GameApp::game_loop() {
             ConsoleUI::death_message(state);
             running_ = false;
             SaveManager::remove_save();
-            break;
+            sound_.play_sound(GameSounds::kGameLoose);
+            std::this_thread::sleep_for(std::chrono::duration<double>(sound_.get_wav_duration(GameSounds::kGameLoose)));
+            return;
         }
 
         if (state.years >= kMaxYears) {
-            running_ = false;
-            ConsoleUI::end_game(logic_.end_game_results());
-            SaveManager::remove_save();
-            break;
+            end_game();
+            return;
         }
+        sound_.play_sound(GameSounds::kNextRound);
         logic_.get_current_price_for_land();
         InputState input = ui_.input_message({});
 
@@ -57,8 +60,21 @@ void GameApp::game_loop() {
 }
 
 void GameApp::end_game() {
-    const ResultGameStatistic stats = logic_.end_game_results();
-    ConsoleUI::end_game(stats);
+    running_ = false;
+    const auto mark_results = logic_.get_result_mark();
+    ConsoleUI::end_game(logic_.end_game_results(), mark_results);
+    SaveManager::remove_save();
+    switch (mark_results) {
+        case Fail:
+            sound_.play_sound(GameSounds::kGameLoose);
+            break;
+        case Satisfactorily:
+        case Good:
+        case Excellent:
+            sound_.play_sound(GameSounds::kGameWin);
+            break;
+    }
+    std::this_thread::sleep_for(std::chrono::duration<double>(sound_.get_wav_duration(GameSounds::kGameLoose)));
 }
 
 bool GameApp::try_load_saved_game() {

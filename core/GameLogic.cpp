@@ -157,6 +157,20 @@ void GameLogic::buy_land(GameState &s) const {
     s.land += buying_land / s.land_price;
 }
 
+GameMarkResults GameLogic::get_result_mark() {
+    const auto [average_death_percent, lend_for_person] = end_game_results();
+    if (average_death_percent > 33 && lend_for_person < 7) {
+        return Fail;
+    }
+    if (average_death_percent > 10 && lend_for_person < 9) {
+        return Satisfactorily;
+    }
+    if (average_death_percent > 3 && lend_for_person < 10) {
+        return Good;
+    }
+    return Excellent;
+}
+
 int GameLogic::wheat_consumption_for_land(const GameState &s) {
     return s.land / GameConsts::kWheatConsumptionForLand;
 }

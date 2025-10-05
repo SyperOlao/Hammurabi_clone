@@ -4,6 +4,7 @@
 
 #ifndef HAMMURABI_CLONE_CONSOLEUI_H
 #define HAMMURABI_CLONE_CONSOLEUI_H
+#include "../core/Constants.h"
 #include "../core/GameRepository.h"
 #include "../core/GameState.h"
 #include "validation/Validation.h"
@@ -23,7 +24,7 @@ public:
 
     static void death_message(GameState game_state);
 
-    static void end_game(ResultGameStatistic result);
+    static void end_game(ResultGameStatistic result, GameMarkResults mark_results);
 
     [[nodiscard]] InputState input_message(InputState input_state) const;
 

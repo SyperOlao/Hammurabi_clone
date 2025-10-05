@@ -10,8 +10,11 @@ namespace fs = std::filesystem;
 
 class Sound {
 public:
-    fs::path exe_dir();
-    fs::path find_sound_upwards(const std::wstring& rel);
+    static void play_sound(const std::wstring &path_sound);
+    static double get_wav_duration(const std::wstring& path);
+private:
+    static fs::path exe_dir();
+    static fs::path find_sound_upwards(const std::wstring& rel);
 };
 
 

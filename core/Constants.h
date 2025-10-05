@@ -24,4 +24,18 @@ namespace GameConsts {
     static constexpr int kWheatConsumptionForLand = 2;
 };
 
+namespace GameSounds {
+    static constexpr auto kStartGame = L"assets\\sound_start_pcm.wav";
+    static constexpr auto kNextRound = L"assets\\sound_next_pcm.wav";
+    static constexpr auto kGameLoose = L"assets\\sound_loose_pcm.wav";
+    static constexpr auto kGameWin = L"assets\\sound_win_pcm.wav";
+    static constexpr auto kPlague = L"assets\\sound_chuma_pcm.wav";
+}
+
+enum GameMarkResults {
+    Fail,
+    Satisfactorily,
+    Good,
+    Excellent,
+};
 #endif //HAMMURABI_CLONE_CONSTANTS_H

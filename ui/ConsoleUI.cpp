@@ -7,6 +7,7 @@
 #include <sstream>
 #include <thread>
 
+#include "../core/Constants.h"
 #include "../utils/Color.h"
 
 ConsoleUI::ConsoleUI(IGameRepository &repo) : repo_(repo) {
@@ -235,7 +236,7 @@ std::string ConsoleUI::prompt_until_valid(const std::string &field_key, const st
     }
 }
 
-void ConsoleUI::end_game(ResultGameStatistic result) {
+void ConsoleUI::end_game(ResultGameStatistic result, GameMarkResults mark_results) {
     using namespace std;
 
     const int W = 78;
@@ -271,24 +272,29 @@ void ConsoleUI::end_game(ResultGameStatistic result) {
     // Оценка по правилам
     string verdict_title;
     string verdict_text;
-    if (result.average_death_percent > 33 && result.lend_for_person < 7) {
-        verdict_title = string(Color::NEON_RED) + "Оценка: Плохо" + Color::RESET;
-        verdict_text = "«Из-за вашей некомпетентности в управлении, народ устроил бунт, и изгнал вас их города. "
-                "Теперь вы вынуждены влачить жалкое существование в изгнании»";
-    } else if (result.average_death_percent > 10 && result.lend_for_person < 9) {
-        verdict_title = string(Color::NEON_YELLOW) + "Оценка: Удовлетворительно" + Color::RESET;
-        verdict_text = "«Вы правили железной рукой, подобно Нерону и Ивану Грозному. Народ вздохнул с облегчением, "
-                "и никто больше не желает видеть вас правителем»";
-    } else if (result.average_death_percent > 3 && result.lend_for_person < 10) {
-        verdict_title = string(Color::NEON_CYAN) + "Оценка: Хорошо" + Color::RESET;
-        verdict_text = "«Вы справились вполне неплохо, у вас, конечно, есть недоброжелатели, "
-                "но многие хотели бы увидеть вас во главе города снова»";
-    } else {
-        verdict_title = string(Color::NEON_GREEN) + "Оценка: Отлично" + Color::RESET;
-        verdict_text = "«Фантастика! Карл Великий, Дизраэли и Джефферсон вместе не справились бы лучше»";
+
+    switch (mark_results) {
+        case Fail:
+            verdict_title = string(Color::NEON_RED) + "Оценка: Плохо" + Color::RESET;
+            verdict_text = "«Из-за вашей некомпетентности в управлении, народ устроил бунт, и изгнал вас их города. "
+                    "Теперь вы вынуждены влачить жалкое существование в изгнании»";
+            break;
+        case Satisfactorily:
+            verdict_title = string(Color::NEON_YELLOW) + "Оценка: Удовлетворительно" + Color::RESET;
+            verdict_text = "«Вы правили железной рукой, подобно Нерону и Ивану Грозному. Народ вздохнул с облегчением, "
+                    "и никто больше не желает видеть вас правителем»";
+            break;
+            case Good:
+            verdict_title = string(Color::NEON_CYAN) + "Оценка: Хорошо" + Color::RESET;
+            verdict_text = "«Вы справились вполне неплохо, у вас, конечно, есть недоброжелатели, "
+                    "но многие хотели бы увидеть вас во главе города снова»";
+            break;
+        case Excellent:
+            verdict_title = string(Color::NEON_GREEN) + "Оценка: Отлично" + Color::RESET;
+            verdict_text = "«Фантастика! Карл Великий, Дизраэли и Джефферсон вместе не справились бы лучше»";
+            break;
+
     }
-
-
     {
         ostringstream v;
         v << "\n" << "╟" << repeat_string("═", W - 2) << "╢\n";

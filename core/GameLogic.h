@@ -7,6 +7,7 @@
 #include "GameState.h"
 #include <random>
 
+#include "Constants.h"
 #include "GameRepository.h"
 
 class GameLogic {
@@ -17,7 +18,10 @@ public:
 
     int get_current_price_for_land();
 
+    GameMarkResults get_result_mark();
+
     ResultGameStatistic end_game_results();
+
     [[nodiscard]] bool is_game_over() const;
 
 private:

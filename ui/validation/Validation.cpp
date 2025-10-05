@@ -4,7 +4,7 @@
 
 #include "../../ui/validation/Validation.h"
 #include "../../utils/Utils.h"
-#include "../../core/Constants.h";
+#include "../../core/Constants.h"
 
 Validation::Validation() {
     const long long KErrorNumber = 1000000000LL;

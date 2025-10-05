@@ -8,6 +8,7 @@
 #include "core/GameRepository.h"
 #include "persistence/SaveManager.h"
 #include "ui/ConsoleUI.h"
+#include "ui/sound/Sound.h"
 
 
 class GameApp {
@@ -22,6 +23,8 @@ private:
     GameLogic logic_;
     ConsoleUI ui_;
     SaveManager save_;
+    Sound sound_;
+
     bool running_ = false;
     const int kMaxYears = 10;
 
