@@ -18,6 +18,13 @@ namespace Color {
     constexpr auto CYBERPUNK_PINK   = "\033[1;95m";
 
     constexpr auto ERROR        = "\033[1;91m";
+    constexpr auto WHITE_BACK        = "\033[107;47m";
+    constexpr auto RED_BACK        = "\033[91;41m";
+    constexpr auto BLUE_WHITE_BACK        = "\033[97;44m";
+    constexpr auto BLUE_BLACK_BACK        = "\033[30;44m";
+
+
+
 }
 
 #endif //HAMMURABI_CLONE_COLORS_H

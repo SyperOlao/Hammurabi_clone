@@ -43,7 +43,12 @@ void ConsoleUI::hud(const GameState &s) {
             << "Пшеница=" << Color::NEON_CYAN << s.wheat << Color::RESET << "  "
             << "Количество акров=" << Color::NEON_PURPLE << s.land << Color::RESET
             << "  " << Color::DIM << "(Стоимость акра=" << Color::NEON_BLUE << s.land_price << Color::RESET << ")" <<
-            Color::RESET << "\n";
+            Color::RESET << "\n"
+            << Color::NEON_YELLOW << "Каждый житель потребляет " << Color::NEON_GREEN << GameConsts::kConsumptionOfWheat
+            << Color::RESET << Color::NEON_YELLOW << " в ход" << Color::RESET << std::endl
+            << Color::NEON_YELLOW << "Каждый акр для засева требует " << Color::NEON_GREEN << static_cast<float>(1) / static_cast<float>(GameConsts::kWheatConsumptionForLand)
+            << Color::RESET << Color::NEON_YELLOW << " в ход" << Color::RESET;
+
     typewriter(hud.str(), 0);
 }
 
@@ -164,11 +169,11 @@ void ConsoleUI::startup_message() const {
 
 void ConsoleUI::death_message(GameState game_state) {
     const std::string message = std::format(
-       "{}Вы проиграли, у вас умерло более {}% жителей за 1 год. Это позор, мой повелитель! Я вас изгоняю и займу ваше место!{}",
-       Color::NEON_RED,
-       GameConsts::kLooseDeathPopulation,
-       Color::RESET
-   );
+        "{}Вы проиграли, у вас умерло более {}% жителей за 1 год. Это позор, мой повелитель! Я вас изгоняю и займу ваше место!{}",
+        Color::NEON_RED,
+        GameConsts::kLooseDeathPopulation,
+        Color::RESET
+    );
     typewriter(message);
     subtitles();
 }
@@ -286,7 +291,7 @@ void ConsoleUI::end_game(ResultGameStatistic result, GameMarkResults mark_result
             verdict_text = "«Вы правили железной рукой, подобно Нерону и Ивану Грозному. Народ вздохнул с облегчением, "
                     "и никто больше не желает видеть вас правителем»";
             break;
-            case Good:
+        case Good:
             verdict_title = string(Color::NEON_CYAN) + "Оценка: Хорошо" + Color::RESET;
             verdict_text = "«Вы справились вполне неплохо, у вас, конечно, есть недоброжелатели, "
                     "но многие хотели бы увидеть вас во главе города снова»";
@@ -295,7 +300,6 @@ void ConsoleUI::end_game(ResultGameStatistic result, GameMarkResults mark_result
             verdict_title = string(Color::NEON_GREEN) + "Оценка: Отлично" + Color::RESET;
             verdict_text = "«Фантастика! Карл Великий, Дизраэли и Джефферсон вместе не справились бы лучше»";
             break;
-
     }
     {
         ostringstream v;
@@ -517,12 +521,12 @@ void ConsoleUI::subtitles() {
     std::ostringstream fin;
     fin << std::endl;
     const auto line = "==================================";
-    fin << Color::CYBER_WHITE << line << Color::RESET<<std::endl;
-    fin << Color::CYBER_WHITE <<line << Color::RESET<<std::endl;
-    fin << Color::NEON_BLUE << "Developed    by   " << " Anna Moklyakova" << Color::RESET;
-    fin << "\n" << Color::NEON_BLUE << "Sound and QA by" << " Konstantin Semenov" << Color::RESET << std::endl;
-    fin << Color::NEON_RED << line << Color::RESET <<std::endl;
-    fin << Color::NEON_RED << line << Color::RESET<<std::endl;
+    fin << Color::WHITE_BACK << line << Color::RESET << std::endl;
+    fin << Color::WHITE_BACK << line << Color::RESET << std::endl;
+    fin << Color::BLUE_WHITE_BACK << "Developed    by   " << " Anna Moklyakova" << Color::RESET;
+    fin << "\n" << Color::BLUE_WHITE_BACK << "Sound and QA by" << " Konstantin Semenov" << Color::RESET << std::endl;
+    fin << Color::RED_BACK << line << Color::RESET << std::endl;
+    fin << Color::RED_BACK << line << Color::RESET << std::endl;
     typewriter(fin.str(), 0);
 }
 
