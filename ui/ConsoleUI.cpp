@@ -45,9 +45,9 @@ void ConsoleUI::hud(const GameState &s) {
             << "  " << Color::DIM << "(Стоимость акра=" << Color::NEON_BLUE << s.land_price << Color::RESET << ")" <<
             Color::RESET << "\n"
             << Color::NEON_YELLOW << "Каждый житель потребляет " << Color::NEON_GREEN << GameConsts::kConsumptionOfWheat
-            << Color::RESET << Color::NEON_YELLOW << " в ход" << Color::RESET << std::endl
+            << Color::RESET << Color::NEON_YELLOW << "бушелей пшеницы в год" << Color::RESET << std::endl
             << Color::NEON_YELLOW << "Каждый акр для засева требует " << Color::NEON_GREEN << static_cast<float>(1) / static_cast<float>(GameConsts::kWheatConsumptionForLand)
-            << Color::RESET << Color::NEON_YELLOW << " в ход" << Color::RESET;
+            << Color::RESET << Color::NEON_YELLOW <<  "бушелей пшеницы в год" << Color::RESET;
 
     typewriter(hud.str(), 0);
 }
