@@ -6,6 +6,7 @@
 #include <algorithm>
 #include "Constants.h"
 #include <cassert>
+#include <iostream>
 
 
 GameLogic::GameLogic(IGameRepository &repo)
@@ -132,7 +133,6 @@ void GameLogic::prepare_game_state_before_next_round(GameState &s) {
     s.harvest_yield = 0;
     s.sow_wheat_land = 0;
     s.death_from_starvation = 0;
-    s.inspector = false;
 }
 
 void GameLogic::prepare_game_state_after_next_round(GameState &s) {
@@ -193,13 +193,21 @@ void GameLogic::buy_death_souls(GameState &s) const {
 }
 
 void GameLogic::chance_of_inspector_appearance(GameState &s) {
-    if (s.years < GameConsts::kYearAfterComingInspector) return;
-    if (s.death_from_starvation < GameConsts::kCheckAmoundOfDeath) return;
+    std::cout << "s.death_from_starvation" << s.death_from_starvation << std::endl;
+    if (s.years <= GameConsts::kYearAfterComingInspector ||
+        s.death_from_starvation < GameConsts::kCheckAmoundOfDeath) {
+        s.inspector = false;
+        return;
+    }
+
+
     constexpr int min_percent = 0;
     constexpr int max_percent = 100;
     if (std::uniform_int_distribution<int> inspector_chance(min_percent, max_percent);
         inspector_chance(rng_) <= GameConsts::kChanceInspector) {
         s.inspector = true;
+    } else {
+        s.inspector = false;
     }
 }
 

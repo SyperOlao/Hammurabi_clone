@@ -24,11 +24,11 @@ namespace GameConsts {
     static constexpr int kWheatConsumptionForLand = 2;
 
     static constexpr int kChanceInspector = 100;
-    static constexpr int kYearAfterComingInspector = 4;
+    static constexpr int kYearAfterComingInspector = 0;
     static constexpr int kPercentOfDeathToBuy = 10;
     static constexpr int kMinValueOfDeathToBuy = 30;
     static constexpr int kMaxValueOfDeathToBuy = 40;
-    static constexpr int kCheckAmoundOfDeath = 20;
+    static constexpr int kCheckAmoundOfDeath = 1;
     static constexpr int kSanctionsLand = 30;
     static constexpr int kSanctionsWheat = 20;
 }

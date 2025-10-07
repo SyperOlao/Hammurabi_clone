@@ -50,20 +50,16 @@ void GameApp::game_loop() {
         logic_.get_shared_values();
 
         InputState input = ui_.input_message({});
-        ui_.inspector_ui(logic_.bribe_amount1(), input);
+
 
 
         ui_.set_last_input(input);
-        if (state.inspector) {
-            Sound::play_sound(GameSounds::kInspector);
-            if (input.give_bribe) {
-                logic_.bribe();
-            } else {
-                logic_.sanctions();
-            }
-        }
+
+
 
         logic_.next_round(input);
+
+
 
         if (state.years >= 1) {
             ui_.show_round_summary_from_repo();
@@ -71,6 +67,15 @@ void GameApp::game_loop() {
                 Sound::play_sound(GameSounds::kPlague);
             } else {
                 Sound::play_sound(GameSounds::kNoPlague);
+            }
+        }
+        if (state.inspector) {
+            ui_.inspector_ui(logic_.bribe_amount1(), input);
+            Sound::play_sound(GameSounds::kInspector);
+            if (input.give_bribe) {
+                logic_.bribe();
+            } else {
+                logic_.sanctions();
             }
         }
 

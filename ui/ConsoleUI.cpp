@@ -582,11 +582,12 @@ bool ConsoleUI::bribe_ui(const int amount_of_bribe) {
 
 InputState ConsoleUI::inspector_ui(const int amount_of_bribe, InputState input_state) {
     const auto snap = repo_.get_snapshot();
+    if (!snap->inspector) return input_state;
     std::ostringstream o;
-    o << "  К вам пожаловал " << Color::NEON_CYAN << "ревизор!!! " << Color::RESET << std::endl
-            << " он приходит, с неким шансом, когда ваше количество умерших от голода" << Color::NEON_CYAN
-    << snap->death_from_starvation << Color::RESET
-            << " > " << Color::NEON_RED << GameConsts::kCheckAmoundOfDeath << Color::RESET;
+    o << " К вам пожаловал " << Color::NEON_YELLOW << "Ревизор" << Color::RESET << std::endl
+            << "он приходит, с неким шансом, когда ваше количество умерших от голода " << Color::NEON_CYAN
+    << snap->death_from_starvation << Color::RESET << " > " <<
+        Color::NEON_RED << GameConsts::kCheckAmoundOfDeath << Color::RESET <<std::endl;
     typewriter(o.str(), 0);
     bool give_bribe = false;
     if (snap->death_souls > amount_of_bribe) {
