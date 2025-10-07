@@ -44,7 +44,8 @@ void ConsoleUI::hud(const GameState &s) {
             << "Пшеница=" << Color::NEON_CYAN << s.wheat << Color::RESET << "  "
             << "Количество акров=" << Color::NEON_PURPLE << s.land << Color::RESET << " "
             << "Количество мертвых душ=" << Color::NEON_GREEN << s.death_souls << Color::RESET << std::endl
-            << "" << Color::DIM << "|Стоимость акра=" << Color::NEON_BLUE << s.land_price << Color::RESET << "|" << std::endl <<
+            << "" << Color::DIM << "|Стоимость акра=" << Color::NEON_BLUE << s.land_price << Color::RESET << "|" <<
+            std::endl <<
             Color::RESET << ""
             << Color::DIM << "|Стоимость мертвой души=" << Color::NEON_BLUE << s.death_souls_price <<
             Color::RESET << "|" <<
@@ -378,10 +379,15 @@ InputState ConsoleUI::input_message(InputState input_state) const {
     hud(temp_state);
     std::string s_sow = prompt_until_valid("wheat_for_sow", "Зерно для посева", validator, &temp_state);
     str_to_ll(s_sow, tmp);
-    std::string s_souls = prompt_until_valid("buy_death_souls", "Купить мертвые души", validator, &temp_state);
-    str_to_ll(s_souls, tmp);
-    temp_state.wheat -= static_cast<int>(tmp);
-    hud(temp_state);
+    if (snap->death_from_starvation > 0) {
+        std::string s_souls = prompt_until_valid("buy_death_souls", "Купить мертвые души", validator, &temp_state);
+        str_to_ll(s_souls, tmp);
+        temp_state.wheat -= static_cast<int>(tmp);
+        hud(temp_state);
+        if (!str_to_ll(s_sow, tmp)) tmp = 0;
+        input_state.buy_death_souls = static_cast<int>(tmp);
+    }
+
 
     if (!str_to_ll(s_buy, tmp)) tmp = 0;
     input_state.land_for_buy = static_cast<int>(tmp);
@@ -400,8 +406,11 @@ InputState ConsoleUI::input_message(InputState input_state) const {
                 << "Куплено земли=" << Color::NEON_GREEN << input_state.land_for_buy << Color::RESET << "  "
                 << "Продано земли=" << Color::NEON_PURPLE << input_state.land_for_sell << Color::RESET << "  "
                 << "Выдано пшена для еды=" << Color::NEON_CYAN << input_state.wheat_for_food << Color::RESET << "  "
-                << "Выдано пшена для засева=" << Color::NEON_GREEN << input_state.wheat_for_sow << Color::RESET << "\n"
-                << "Куплено метрвых душ=" << Color::NEON_GREEN << input_state.buy_death_souls << Color::RESET << "\n";
+                << "Выдано пшена для засева=" << Color::NEON_GREEN << input_state.wheat_for_sow << Color::RESET << "\n";
+        if (snap->death_from_starvation > 0) {
+            confirm << "Куплено метрвых душ=" << Color::NEON_GREEN << input_state.buy_death_souls << Color::RESET <<
+                    "\n";
+        }
         typewriter(confirm.str(), 0);
     }
 
@@ -586,8 +595,8 @@ InputState ConsoleUI::inspector_ui(const int amount_of_bribe, InputState input_s
     std::ostringstream o;
     o << " К вам пожаловал " << Color::NEON_YELLOW << "Ревизор" << Color::RESET << std::endl
             << "он приходит, с неким шансом, когда ваше количество умерших от голода " << Color::NEON_CYAN
-    << snap->death_from_starvation << Color::RESET << " > " <<
-        Color::NEON_RED << GameConsts::kCheckAmoundOfDeath << Color::RESET <<std::endl;
+            << snap->death_from_starvation << Color::RESET << " > " <<
+            Color::NEON_RED << GameConsts::kCheckAmoundOfDeath << Color::RESET << std::endl;
     typewriter(o.str(), 0);
     bool give_bribe = false;
     if (snap->death_souls > amount_of_bribe) {
@@ -596,8 +605,10 @@ InputState ConsoleUI::inspector_ui(const int amount_of_bribe, InputState input_s
     input_state.give_bribe = give_bribe;
 
     if (!give_bribe) {
-        o << "Ревизор забрал у вас " << Color::NEON_CYAN << snap->land * GameConsts::kSanctionsLand / 100 << Color::RESET << " акра(ов) земли " << std::endl
-        << " Также " <<   Color::NEON_CYAN  << snap->land * GameConsts::kSanctionsWheat / 100 << Color::RESET << " бушеля(ей) пшеницы"<< std::endl;
+        o << "Ревизор забрал у вас " << Color::NEON_CYAN << snap->land * GameConsts::kSanctionsLand / 100 <<
+                Color::RESET << " акра(ов) земли " << std::endl
+                << " Также " << Color::NEON_CYAN << snap->land * GameConsts::kSanctionsWheat / 100 << Color::RESET <<
+                " бушеля(ей) пшеницы" << std::endl;
         typewriter(o.str(), 0);
     }
     return input_state;

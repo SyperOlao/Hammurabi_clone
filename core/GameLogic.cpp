@@ -193,7 +193,6 @@ void GameLogic::buy_death_souls(GameState &s) const {
 }
 
 void GameLogic::chance_of_inspector_appearance(GameState &s) {
-    std::cout << "s.death_from_starvation" << s.death_from_starvation << std::endl;
     if (s.years <= GameConsts::kYearAfterComingInspector ||
         s.death_from_starvation < GameConsts::kCheckAmoundOfDeath) {
         s.inspector = false;

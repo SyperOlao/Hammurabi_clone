@@ -87,7 +87,7 @@ Validation::Validation() {
         if (!state) return ValidationResult::Good();
         if (state->death_for_the_last_round == 0)
             return ValidationResult::Bad(
-                "Nobody does not died");
+                "Nobody died");
         if (v > state->death_for_the_last_round * 100 /
             GameConsts::kPercentOfDeathToBuy)
             return ValidationResult::Bad(
