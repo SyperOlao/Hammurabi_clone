@@ -23,7 +23,7 @@ namespace GameConsts {
     static constexpr int kPlagueDeathPercent = 15;
     static constexpr int kWheatConsumptionForLand = 2;
 
-    static constexpr int kChanceInspector = 15;
+    static constexpr int kChanceInspector = 100;
     static constexpr int kYearAfterComingInspector = 4;
     static constexpr int kPercentOfDeathToBuy = 10;
     static constexpr int kMinValueOfDeathToBuy = 30;

@@ -3,6 +3,9 @@
 //
 
 #include "../../ui/validation/Validation.h"
+
+#include <format>
+
 #include "../../utils/Utils.h"
 #include "../../core/Constants.h"
 
@@ -82,7 +85,15 @@ Validation::Validation() {
         if (v == 0) return ValidationResult::Good();
 
         if (!state) return ValidationResult::Good();
-
+        if (state->death_for_the_last_round == 0)
+            return ValidationResult::Bad(
+                "Nobody does not died");
+        if (v > state->death_for_the_last_round * 100 /
+            GameConsts::kPercentOfDeathToBuy)
+            return ValidationResult::Bad(
+                std::format(
+                    "No one died in such quantities. Maximum {}% of mortality",
+                    GameConsts::kPercentOfDeathToBuy));
         if (v > static_cast<long long>(state->death_souls_price * state->death_for_the_last_round * 100 /
                                        GameConsts::kPercentOfDeathToBuy))
             return ValidationResult::Bad(

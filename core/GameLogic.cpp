@@ -278,14 +278,18 @@ int GameLogic::available_amount_of_dead_souls(GameState &s) {
 }
 
 void GameLogic::sanctions() const {
-    repo_.update_state([this](GameState &s) {
-        s.land -= s.land * GameConsts::kSanctionsLand / 100;
-        s.wheat -= s.wheat * GameConsts::kSanctionsWheat / 100;
+    repo_.update_state([](GameState &s) {
+        if (s.inspector) {
+            s.land -= s.land * GameConsts::kSanctionsLand / 100;
+            s.wheat -= s.wheat * GameConsts::kSanctionsWheat / 100;
+        }
     });
 }
 
 void GameLogic::bribe() const {
     repo_.update_state([this](GameState &s) {
-        s.death_souls -= bribe_amount;
+        if (s.inspector) {
+            s.death_souls -= bribe_amount;
+        }
     });
 }
