@@ -30,6 +30,7 @@ namespace GameSounds {
     static constexpr auto kGameLoose = L"assets\\sound_loose_pcm.wav";
     static constexpr auto kGameWin = L"assets\\sound_win_pcm.wav";
     static constexpr auto kPlague = L"assets\\sound_chuma_pcm.wav";
+    static constexpr auto kNoPlague = L"assets\\sound_no_chuma_pcm.wav";
 }
 
 enum GameMarkResults {

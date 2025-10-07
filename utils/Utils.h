@@ -3,6 +3,8 @@
 //
 #pragma once
 
+#include <iostream>
+#include <limits>
 #include <string>
 
 namespace Utils {
@@ -15,5 +17,9 @@ namespace Utils {
         if (end == s.c_str() || *end != '\0') return false;
         out = v;
         return true;
+    }
+
+    static void drain_line() {
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
 }

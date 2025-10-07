@@ -12,11 +12,14 @@
 #include "../core/Constants.h"
 #include "../utils/Color.h"
 
+
+
 ConsoleUI::ConsoleUI(IGameRepository &repo) : repo_(repo) {
     token_ = repo_.subscribe([this](const std::shared_ptr<const GameState> &snap) {
         render(*snap);
     });
 }
+
 
 
 void ConsoleUI::set_last_input(const InputState &input) {
@@ -106,7 +109,7 @@ bool ConsoleUI::prompt_save_and_exit(const GameState &current_state) {
         input = trim(input);
         if (input.empty()) {
             input = "n";
-        };
+        }
 
         char c = std::tolower(static_cast<unsigned char>(input[0]));
         if (c == 'y') {
@@ -122,6 +125,8 @@ bool ConsoleUI::prompt_save_and_exit(const GameState &current_state) {
         std::this_thread::sleep_for(std::chrono::milliseconds(300));
     }
 }
+
+
 
 void ConsoleUI::typewriter_cin(const std::string &text, int delay_ms) {
     for (const char c: text) {

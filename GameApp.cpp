@@ -58,6 +58,8 @@ void GameApp::game_loop() {
             ui_.show_round_summary_from_repo();
             if (state.plague) {
                 Sound::play_sound(GameSounds::kPlague);
+            }else {
+                Sound::play_sound(GameSounds::kNoPlague);
             }
         }
 
