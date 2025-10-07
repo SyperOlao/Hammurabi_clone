@@ -13,13 +13,11 @@
 #include "../utils/Color.h"
 
 
-
 ConsoleUI::ConsoleUI(IGameRepository &repo) : repo_(repo) {
     token_ = repo_.subscribe([this](const std::shared_ptr<const GameState> &snap) {
         render(*snap);
     });
 }
-
 
 
 void ConsoleUI::set_last_input(const InputState &input) {
@@ -42,15 +40,20 @@ void ConsoleUI::typewriter(const std::string &text, const int delay_ms) {
 void ConsoleUI::hud(const GameState &s) {
     std::ostringstream hud;
     hud << Color::NEON_YELLOW << "HUD: " << Color::RESET
-            << "Популяция=" << Color::NEON_GREEN << s.population << Color::RESET << "  "
-            << "Пшеница=" << Color::NEON_CYAN << s.wheat << Color::RESET << "  "
-            << "Количество акров=" << Color::NEON_PURPLE << s.land << Color::RESET
+            << "Популяция= " << Color::NEON_GREEN << s.population << Color::RESET << "  "
+            << "Пшеница= " << Color::NEON_CYAN << s.wheat << Color::RESET << "  "
+            << "Количество акров= " << Color::NEON_PURPLE << s.land << Color::RESET
+            << "Количество мертвых душ= " << Color::NEON_PURPLE << s.death_souls << Color::RESET
             << "  " << Color::DIM << "(Стоимость акра=" << Color::NEON_BLUE << s.land_price << Color::RESET << ")" <<
+            Color::RESET << "\n"
+            << "  " << Color::DIM << "(Стоимость мертвой души=" << Color::NEON_BLUE << s.death_souls_price <<
+            Color::RESET << ")" <<
             Color::RESET << "\n"
             << Color::NEON_YELLOW << "Каждый житель потребляет " << Color::NEON_GREEN << GameConsts::kConsumptionOfWheat
             << Color::RESET << Color::NEON_YELLOW << " бушелей пшеницы в год" << Color::RESET << std::endl
-            << Color::NEON_YELLOW << "Каждый акр для засева требует " << Color::NEON_GREEN << static_cast<float>(1) / static_cast<float>(GameConsts::kWheatConsumptionForLand)
-            << Color::RESET << Color::NEON_YELLOW <<  " бушелей пшеницы в год" << Color::RESET;
+            << Color::NEON_YELLOW << "Каждый акр для засева требует " << Color::NEON_GREEN << static_cast<float>(1) /
+            static_cast<float>(GameConsts::kWheatConsumptionForLand)
+            << Color::RESET << Color::NEON_YELLOW << " бушелей пшеницы в год" << Color::RESET;
 
     typewriter(hud.str(), 0);
 }
@@ -125,7 +128,6 @@ bool ConsoleUI::prompt_save_and_exit(const GameState &current_state) {
         std::this_thread::sleep_for(std::chrono::milliseconds(300));
     }
 }
-
 
 
 void ConsoleUI::typewriter_cin(const std::string &text, int delay_ms) {
@@ -214,6 +216,7 @@ bool ConsoleUI::str_to_ll(const std::string &s, long long &out) {
     return true;
 }
 
+
 std::string ConsoleUI::prompt_until_valid(const std::string &field_key, const std::string &label,
                                           const Validation &validator, const GameState *state_ptr) {
     std::string line;
@@ -247,6 +250,7 @@ std::string ConsoleUI::prompt_until_valid(const std::string &field_key, const st
         std::cout << Color::DIM << "Попробуй ещё раз, но на этот раз внимательнее." << Color::RESET << "\n\n";
     }
 }
+
 
 void ConsoleUI::end_game(ResultGameStatistic result, GameMarkResults mark_results) {
     using namespace std;
@@ -374,6 +378,8 @@ InputState ConsoleUI::input_message(InputState input_state) const {
     hud(temp_state);
     std::string s_sow = prompt_until_valid("wheat_for_sow", "Зерно для посева", validator, &temp_state);
     str_to_ll(s_sow, tmp);
+    std::string s_souls = prompt_until_valid("buy_death_souls", "Зерно для посева", validator, &temp_state);
+    str_to_ll(s_souls, tmp);
     temp_state.wheat -= static_cast<int>(tmp);
     hud(temp_state);
 
@@ -394,7 +400,8 @@ InputState ConsoleUI::input_message(InputState input_state) const {
                 << "Куплено земли=" << Color::NEON_GREEN << input_state.land_for_buy << Color::RESET << "  "
                 << "Продано земли=" << Color::NEON_PURPLE << input_state.land_for_sell << Color::RESET << "  "
                 << "Выдано пшена для еды=" << Color::NEON_CYAN << input_state.wheat_for_food << Color::RESET << "  "
-                << "Выдано пшена для засева=" << Color::NEON_GREEN << input_state.wheat_for_sow << Color::RESET << "\n";
+                << "Выдано пшена для засева=" << Color::NEON_GREEN << input_state.wheat_for_sow << Color::RESET << "\n"
+                << "Куплено метрвых душ=" << Color::NEON_GREEN << input_state.buy_death_souls << Color::RESET << "\n";
         typewriter(confirm.str(), 0);
     }
 
@@ -533,6 +540,66 @@ void ConsoleUI::subtitles() {
     fin << Color::RED_BACK << line << Color::RESET << std::endl;
     fin << Color::RED_BACK << line << Color::RESET << std::endl;
     typewriter(fin.str(), 0);
+}
+
+bool ConsoleUI::bribe_ui(const int amount_of_bribe) {
+    std::ostringstream o;
+    o << "Господин, я смог договориться с ревизором, он может принять нашу взятку в количестве "
+            << Color::NEON_CYAN << amount_of_bribe << Color::RESET << " мертвых душ. Хотите ли вы дать ему взятку?";
+    typewriter(o.str(), 0);
+
+    while (true) {
+        typewriter_cin(std::string(Color::NEON_PURPLE) + "» " + Color::RESET +
+                       "Введите " + Color::NEON_GREEN + "y" + Color::RESET + " (да) или " +
+                       Color::NEON_RED + "n/Enter" + Color::RESET + " (нет): ", 0);
+
+        std::string input;
+        if (!std::getline(std::cin, input)) {
+            input = "n";
+        }
+
+        input = trim(input);
+        if (input.empty()) {
+            input = "n";
+        }
+
+        char c = std::tolower(static_cast<unsigned char>(input[0]));
+        if (c == 'y') {
+            std::cout << Color::NEON_GREEN << "✔ Повелитель, мы откупились от ревизора." << Color::RESET << "\n\n";
+            return true;
+        }
+        if (c == 'n') {
+            std::cout << Color::NEON_YELLOW << "⚠ Ревизор недоволен, он взимает с нас штраф." << Color::RESET
+                    << "\n\n";
+            return false;
+        }
+
+        std::cout << Color::ERROR << "✖ Неверный ввод. Пожалуйста, введите 'y' или 'n'." << Color::RESET << "\n\n";
+        std::this_thread::sleep_for(std::chrono::milliseconds(300));
+    }
+}
+
+
+InputState ConsoleUI::inspector_ui(const int amount_of_bribe, InputState input_state) {
+    const auto snap = repo_.get_snapshot();
+    std::ostringstream o;
+    o << "  К вам пожаловал " << Color::NEON_CYAN << "ревизор!!! " << Color::RESET
+            << " он приходит, с неким шансом, когда ваше количество умерших от голода" << Color::NEON_CYAN << snap->
+            death_from_starvation << Color::RESET
+            << " > " << Color::NEON_RED << GameConsts::kCheckAmoundOfDeath << Color::RESET;
+    typewriter(o.str(), 0);
+    bool give_bribe = false;
+    if (snap->death_souls > amount_of_bribe) {
+        give_bribe = bribe_ui(amount_of_bribe);
+    }
+    input_state.give_bribe = give_bribe;
+
+    if (!give_bribe) {
+        o << "Ревизор забрал у вас " << Color::NEON_CYAN << snap->land * GameConsts::kSanctionsLand / 100 << Color::RESET << " акра(ов) земли " << std::endl
+        << " Также " <<   Color::NEON_CYAN  << snap->land * GameConsts::kSanctionsWheat / 100 << Color::RESET << " бушеля(ей) пшеницы"<< std::endl;
+        typewriter(o.str(), 0);
+    }
+    return input_state;
 }
 
 

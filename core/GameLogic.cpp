@@ -12,6 +12,13 @@ GameLogic::GameLogic(IGameRepository &repo)
     : repo_(repo), rng_(std::random_device{}()) {
 }
 
+void GameLogic::start_round() {
+    repo_.update_state([this](GameState &s) {
+        starting_population_ = s.population;
+        prepare_game_state_before_next_round(s);
+    });
+}
+
 void GameLogic::feed_all_population(GameState &s) const {
     const int request_feed = std::max(0, input_state_.wheat_for_food);
     const int available_feed = std::max(0, s.wheat);
@@ -41,6 +48,20 @@ int GameLogic::get_current_price_for_land() {
         s.land_price = new_price;
     });
     return new_price;
+}
+
+int GameLogic::get_buying_death_souls() {
+    std::uniform_int_distribution<int> price_dist(GameConsts::kMinValueOfDeathToBuy, GameConsts::kMaxValueOfDeathToBuy);
+    const int new_price = price_dist(rng_);
+    repo_.update_state([new_price](GameState &s) {
+        s.death_souls_price = new_price;
+    });
+    return new_price;
+}
+
+int GameLogic::get_current_bribe() {
+    bribe_amount = 10;
+    return bribe_amount;
 }
 
 int GameLogic::max_process_land(const GameState &s) {
@@ -96,7 +117,8 @@ int GameLogic::wheat_after_loss_from_rats(GameState &s) {
 
 void GameLogic::check_loss_condition_by_death_percentage(const GameState &s) {
     if (starting_population_ <= 0) return;
-    const int percent_death = static_cast<int>(static_cast<long long>(s.death_from_starvation) * 100 / starting_population_);
+    const int percent_death = static_cast<int>(static_cast<long long>(s.death_from_starvation) * 100 /
+                                               starting_population_);
     if (percent_death > GameConsts::kLooseDeathPopulation) {
         isLose = true;
     }
@@ -110,6 +132,7 @@ void GameLogic::prepare_game_state_before_next_round(GameState &s) {
     s.harvest_yield = 0;
     s.sow_wheat_land = 0;
     s.death_from_starvation = 0;
+    s.inspector = false;
 }
 
 void GameLogic::prepare_game_state_after_next_round(GameState &s) {
@@ -120,6 +143,7 @@ void GameLogic::prepare_game_state_after_next_round(GameState &s) {
     }
     s.population += s.immigrants;
     input_state_ = InputState{};
+    s.death_for_the_last_round = s.deaths;
 }
 
 void GameLogic::plague_disaster(GameState &s) {
@@ -158,6 +182,27 @@ void GameLogic::buy_land(GameState &s) const {
     s.land += buying_land;
 }
 
+void GameLogic::buy_death_souls(GameState &s) const {
+    const int buying_death_souls = input_state_.buy_death_souls;
+    if (buying_death_souls <= 0) return;
+
+    const int amount_of_wheat = buying_death_souls * s.death_souls_price;
+    if (amount_of_wheat > s.wheat) return;
+    s.wheat -= amount_of_wheat;
+    s.death_souls += buying_death_souls;
+}
+
+void GameLogic::chance_of_inspector_appearance(GameState &s) {
+    if (s.years < GameConsts::kYearAfterComingInspector) return;
+    if (s.death_from_starvation < GameConsts::kCheckAmoundOfDeath) return;
+    constexpr int min_percent = 0;
+    constexpr int max_percent = 100;
+    if (std::uniform_int_distribution<int> inspector_chance(min_percent, max_percent);
+        inspector_chance(rng_) <= GameConsts::kChanceInspector) {
+        s.inspector = true;
+    }
+}
+
 GameMarkResults GameLogic::get_result_mark() {
     const auto [average_death_percent, lend_for_person] = calculate_end_game_results();
     if (average_death_percent > 33 && lend_for_person < 7) {
@@ -180,13 +225,12 @@ int GameLogic::wheat_consumption_for_land(const GameState &s) {
 void GameLogic::next_round(const InputState &input_state) {
     input_state_ = input_state;
 
-    repo_.update_state([this,&input_state](GameState &s) {
+    repo_.update_state([this](GameState &s) {
         starting_population_ = s.population;
-        prepare_game_state_before_next_round(s);
 
         s.years++;
         buy_land(s);
-
+        buy_death_souls(s);
         sell_land(s);
 
         get_wheat_from_land(s);
@@ -197,9 +241,15 @@ void GameLogic::next_round(const InputState &input_state) {
         add_new_immigrates(s);
         plague_disaster(s);
         check_loss_condition_by_death_percentage(s);
-
+        chance_of_inspector_appearance(s);
         prepare_game_state_after_next_round(s);
     });
+}
+
+void GameLogic::get_shared_values() {
+    get_current_price_for_land();
+    get_buying_death_souls();
+    get_current_bribe();
 }
 
 ResultGameStatistic GameLogic::calculate_end_game_results() {
@@ -221,4 +271,21 @@ ResultGameStatistic GameLogic::calculate_end_game_results() {
 
 bool GameLogic::is_game_over() const {
     return isLose;
+}
+
+int GameLogic::available_amount_of_dead_souls(GameState &s) {
+    return s.death_for_the_last_round * 100 / GameConsts::kPercentOfDeathToBuy;
+}
+
+void GameLogic::sanctions() const {
+    repo_.update_state([this](GameState &s) {
+        s.land -= s.land * GameConsts::kSanctionsLand / 100;
+        s.wheat -= s.wheat * GameConsts::kSanctionsWheat / 100;
+    });
+}
+
+void GameLogic::bribe() const {
+    repo_.update_state([this](GameState &s) {
+        s.death_souls -= bribe_amount;
+    });
 }

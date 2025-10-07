@@ -57,24 +57,39 @@ Validation::Validation() {
         return ValidationResult::Good();
     });
 
-
     register_rule("wheat_for_sow", [](const std::string &val, const GameState *state)-> ValidationResult {
-     long long v;
-     if (!Utils::parse_int64(val, v)) return ValidationResult::Bad("Incorrect input: not an integer");
-     if (v < 0) return ValidationResult::Bad("Incorrect input value < 0");
-     if (v == 0) return ValidationResult::Good();
+        long long v;
+        if (!Utils::parse_int64(val, v)) return ValidationResult::Bad("Incorrect input: not an integer");
+        if (v < 0) return ValidationResult::Bad("Incorrect input value < 0");
+        if (v == 0) return ValidationResult::Good();
 
-     if (!state) return ValidationResult::Good();
+        if (!state) return ValidationResult::Good();
 
-     if (v > static_cast<long long>(state->wheat))
-         return ValidationResult::Bad(
-             "Incorrect input because you haven't got enough wheat for sowing");
-     if (v / GameConsts::kWheatConsumptionForLand > state->land)
-         return ValidationResult::Bad(
-            "Incorrect input because you haven't got enough land");
-     if (v > KErrorNumber) return ValidationResult::Bad("Incorrect input: unrealistically large value");
-     return ValidationResult::Good();
- });
+        if (v > static_cast<long long>(state->wheat))
+            return ValidationResult::Bad(
+                "Incorrect input because you haven't got enough wheat for sowing");
+        if (v / GameConsts::kWheatConsumptionForLand > state->land)
+            return ValidationResult::Bad(
+                "Incorrect input because you haven't got enough land");
+        if (v > KErrorNumber) return ValidationResult::Bad("Incorrect input: unrealistically large value");
+        return ValidationResult::Good();
+    });
+
+    register_rule("buy_death_souls", [](const std::string &val, const GameState *state)-> ValidationResult {
+        long long v;
+        if (!Utils::parse_int64(val, v)) return ValidationResult::Bad("Incorrect input: not an integer");
+        if (v < 0) return ValidationResult::Bad("Incorrect input value < 0");
+        if (v == 0) return ValidationResult::Good();
+
+        if (!state) return ValidationResult::Good();
+
+        if (v > static_cast<long long>(state->death_souls_price * state->death_for_the_last_round * 100 /
+                                       GameConsts::kPercentOfDeathToBuy))
+            return ValidationResult::Bad(
+                "Incorrect input because you haven't got enough wheat for buying souls");
+        if (v > KErrorNumber) return ValidationResult::Bad("Incorrect input: unrealistically large value");
+        return ValidationResult::Good();
+    });
 }
 
 

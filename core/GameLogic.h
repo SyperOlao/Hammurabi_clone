@@ -14,15 +14,28 @@ class GameLogic {
 public:
     explicit GameLogic(IGameRepository &repo);
 
+    void start_round();
+
     void next_round(const InputState &input_state);
 
-    int get_current_price_for_land();
+    void get_shared_values();
 
     GameMarkResults get_result_mark();
 
     ResultGameStatistic calculate_end_game_results();
 
     [[nodiscard]] bool is_game_over() const;
+
+    [[nodiscard]] static int available_amount_of_dead_souls(GameState &s);
+
+    void sanctions() const;
+
+    void bribe() const;
+
+    [[nodiscard]] int bribe_amount1() const {
+        return bribe_amount;
+    }
+
 
 private:
     IGameRepository &repo_;
@@ -32,6 +45,8 @@ private:
     bool isLose{false};
     int starting_population_{0};
     int temp_average_death_percent{0};
+    int death_for_the_last_round{0};
+    int bribe_amount{0};
 
     int get_wheat_from_land(GameState &s);
 
@@ -54,6 +69,16 @@ private:
     void sell_land(GameState &s) const;
 
     void buy_land(GameState &s) const;
+
+    void buy_death_souls(GameState &s) const;
+
+    void chance_of_inspector_appearance(GameState &s);
+
+    int get_current_price_for_land();
+
+    int get_buying_death_souls();
+
+    int get_current_bribe();
 
     [[nodiscard]] static int wheat_consumption_for_land(const GameState &s);
 };

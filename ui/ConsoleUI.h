@@ -34,6 +34,9 @@ public:
 
     static void subtitles();
 
+    InputState inspector_ui(int amount_of_bribe, InputState input_state);
+
+
     static void hud(const GameState &s);
 
     static bool prompt_continue_saved_game();
@@ -61,6 +64,8 @@ private:
     static std::string trim(const std::string &s);
 
     static bool str_to_ll(const std::string &s, long long &out);
+
+    bool bribe_ui(int amount_of_bribe);
 };
 
 

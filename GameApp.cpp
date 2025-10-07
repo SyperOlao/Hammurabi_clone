@@ -11,7 +11,6 @@
 #include "utils/Color.h"
 
 GameApp::GameApp() : repo_(), logic_(repo_), ui_(repo_), sound_() {
-
 }
 
 void GameApp::start_game() {
@@ -46,22 +45,35 @@ void GameApp::game_loop() {
         }
 
         Sound::play_sound(GameSounds::kNextRound);
+        logic_.start_round();
 
+        logic_.get_shared_values();
 
-        logic_.get_current_price_for_land();
         InputState input = ui_.input_message({});
+        ui_.inspector_ui(logic_.bribe_amount1(), input);
+
 
         ui_.set_last_input(input);
+        if (state.inspector) {
+            Sound::play_sound(GameSounds::kInspector);
+            if (input.give_bribe) {
+                logic_.bribe();
+            } else {
+                logic_.sanctions();
+            }
+        }
 
         logic_.next_round(input);
+
         if (state.years >= 1) {
             ui_.show_round_summary_from_repo();
             if (state.plague) {
                 Sound::play_sound(GameSounds::kPlague);
-            }else {
+            } else {
                 Sound::play_sound(GameSounds::kNoPlague);
             }
         }
+
 
         std::this_thread::sleep_for(std::chrono::milliseconds(120));
     }
@@ -92,7 +104,7 @@ bool GameApp::try_load_saved_game() {
 
     if (ConsoleUI::prompt_continue_saved_game()) {
         if (auto saved = SaveManager::load()) {
-            repo_.update_state([&saved](GameState& state) {
+            repo_.update_state([&saved](GameState &state) {
                 state = *saved;
             });
             return true;

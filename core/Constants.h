@@ -22,7 +22,16 @@ namespace GameConsts {
     static constexpr int kPlagueChanceMax = 15;
     static constexpr int kPlagueDeathPercent = 15;
     static constexpr int kWheatConsumptionForLand = 2;
-};
+
+    static constexpr int kChanceInspector = 15;
+    static constexpr int kYearAfterComingInspector = 4;
+    static constexpr int kPercentOfDeathToBuy = 10;
+    static constexpr int kMinValueOfDeathToBuy = 30;
+    static constexpr int kMaxValueOfDeathToBuy = 40;
+    static constexpr int kCheckAmoundOfDeath = 20;
+    static constexpr int kSanctionsLand = 30;
+    static constexpr int kSanctionsWheat = 20;
+}
 
 namespace GameSounds {
     static constexpr auto kStartGame = L"assets\\sound_start_pcm.wav";
@@ -31,6 +40,7 @@ namespace GameSounds {
     static constexpr auto kGameWin = L"assets\\sound_win_pcm.wav";
     static constexpr auto kPlague = L"assets\\sound_chuma_pcm.wav";
     static constexpr auto kNoPlague = L"assets\\sound_no_chuma_pcm.wav";
+    static constexpr auto kInspector = L"assets\\sound_revizor_pcm.wav";
 }
 
 enum GameMarkResults {
