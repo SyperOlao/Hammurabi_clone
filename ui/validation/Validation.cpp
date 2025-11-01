@@ -52,10 +52,12 @@ Validation::Validation() {
 
         if (!state) return ValidationResult::Good();
 
-        if (v > static_cast<long long>(state->wheat))
+        if (v * GameConsts::kConsumptionOfWheat > static_cast<long long>(state->wheat))
             return ValidationResult::Bad(
                 "Incorrect input because you haven't enough wheat");
-
+        if (v  > static_cast<long long>(state->population))
+            return ValidationResult::Bad(
+                       "Incorrect input because you haven't enough population");
         if (v > KErrorNumber) return ValidationResult::Bad("Incorrect input: unrealistically large value");
         return ValidationResult::Good();
     });

@@ -21,9 +21,9 @@ void GameLogic::start_round() {
 }
 
 void GameLogic::feed_all_population(GameState &s) const {
-    const int request_feed = std::max(0, input_state_.wheat_for_food);
+    const int request_feed = std::max(0, input_state_.people_to_feed);
     const int available_feed = std::max(0, s.wheat);
-    const int fed = std::min(request_feed, available_feed);
+    const int fed = std::min(request_feed*GameConsts::kConsumptionOfWheat, available_feed);
 
     s.wheat -= fed;
 

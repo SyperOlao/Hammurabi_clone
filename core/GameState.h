@@ -31,7 +31,7 @@ struct GameState {
 struct InputState {
     int land_for_buy = 0;
     int land_for_sell = 0;
-    int wheat_for_food = 0;
+    int people_to_feed = 0;
     int wheat_for_sow = 0;
     int buy_death_souls = 0;
     bool give_bribe = false;

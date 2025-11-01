@@ -40,16 +40,16 @@ void ConsoleUI::typewriter(const std::string &text, const int delay_ms) {
 void ConsoleUI::hud(const GameState &s) {
     std::ostringstream hud;
     hud << Color::NEON_YELLOW << "HUD: \n" << Color::RESET
-            << "Популяция=" << Color::NEON_GREEN << s.population << Color::RESET << "  "
-            << "Пшеница=" << Color::NEON_CYAN << s.wheat << Color::RESET << "  "
-            << "Количество акров=" << Color::NEON_PURPLE << s.land << Color::RESET << " "
-            << "Количество мертвых душ=" << Color::NEON_GREEN << s.death_souls << Color::RESET << std::endl
-            << "" << Color::DIM << "|Стоимость акра=" << Color::NEON_BLUE << s.land_price << Color::RESET << "|" <<
+            << " | Популяция=" << Color::NEON_GREEN << s.population << Color::RESET << " \t\t|\n "
+            << "| Пшеница=" << Color::NEON_CYAN << s.wheat << Color::RESET << " \t\t|\n "
+            << "| Количество акров=" << Color::NEON_PURPLE << s.land << Color::RESET << "\t|\n "
+            << "| Количество мертвых душ=" << Color::NEON_GREEN << s.death_souls << Color::RESET << " \t|\n "
+            << "" << Color::DIM << "| Стоимость акра=" << Color::NEON_BLUE << s.land_price << Color::RESET << " \t\t|" <<
             std::endl <<
-            Color::RESET << ""
-            << Color::DIM << "|Стоимость мертвой души=" << Color::NEON_BLUE << s.death_souls_price <<
-            Color::RESET << "|" <<
-            Color::RESET << "\n"
+            Color::RESET
+            << Color::DIM << " | Стоимость мертвой души=" << Color::NEON_BLUE << s.death_souls_price <<
+            Color::RESET << " \t|" <<
+            Color::RESET << "\n\n"
             << Color::NEON_YELLOW << "Каждый житель потребляет " << Color::NEON_GREEN << GameConsts::kConsumptionOfWheat
             << Color::RESET << Color::NEON_YELLOW << " бушелей пшеницы в год" << Color::RESET << std::endl
             << Color::NEON_YELLOW << "Каждый акр для засева требует " << Color::NEON_GREEN << static_cast<float>(1) /
@@ -362,22 +362,27 @@ InputState ConsoleUI::input_message(InputState input_state) const {
     auto temp_state = *snap;
     long long tmp = 0;
     hud(temp_state);
-    std::string s_buy = prompt_until_valid("land_for_buy", "Купить акров земли", validator, &temp_state);
+    std::string prompt_text = std::format("Купить акров земли [0-{}]", temp_state.wheat / temp_state.land_price);
+    std::string s_buy = prompt_until_valid("land_for_buy", prompt_text, validator, &temp_state);
     str_to_ll(s_buy, tmp);
     long long cost = tmp * temp_state.land_price;
     temp_state.wheat -= static_cast<int>(cost);
     temp_state.land += static_cast<int>(tmp);
     hud(temp_state);
-    std::string s_sell = prompt_until_valid("land_for_sell", "Продать акров земли", validator, &temp_state);
+    prompt_text = std::format("Продать акров земли [0-{}]", temp_state.land);
+    std::string s_sell = prompt_until_valid("land_for_sell", prompt_text, validator, &temp_state);
     str_to_ll(s_sell, tmp);
     temp_state.land -= static_cast<int>(tmp);
     temp_state.wheat += static_cast<int>(tmp * temp_state.land_price);
     hud(temp_state);
-    std::string s_food = prompt_until_valid("wheat_for_food", "Зерно для еды", validator, &temp_state);
+    prompt_text = std::format("Сколько жителей накормить [0-{}]", temp_state.population);
+    std::string s_food = prompt_until_valid("wheat_for_food", prompt_text, validator, &temp_state);
     str_to_ll(s_food, tmp);
     temp_state.wheat -= static_cast<int>(tmp);
     hud(temp_state);
-    std::string s_sow = prompt_until_valid("wheat_for_sow", "Зерно для посева", validator, &temp_state);
+    prompt_text = std::format("Зерно для посева [0-{}]",
+                                 temp_state.land / GameConsts::kWheatConsumptionForLand);
+    std::string s_sow = prompt_until_valid("wheat_for_sow", prompt_text, validator, &temp_state);
     str_to_ll(s_sow, tmp);
     if (snap->death_from_starvation > 0) {
         std::string s_souls = prompt_until_valid("buy_death_souls", "Купить мертвые души", validator, &temp_state);
@@ -396,7 +401,7 @@ InputState ConsoleUI::input_message(InputState input_state) const {
     input_state.land_for_sell = static_cast<int>(tmp);
 
     if (!str_to_ll(s_food, tmp)) tmp = 0;
-    input_state.wheat_for_food = static_cast<int>(tmp);
+    input_state.people_to_feed = static_cast<int>(tmp);
 
     if (!str_to_ll(s_sow, tmp)) tmp = 0;
     input_state.wheat_for_sow = static_cast<int>(tmp);
@@ -405,7 +410,7 @@ InputState ConsoleUI::input_message(InputState input_state) const {
         confirm << Color::NEON_YELLOW << "Ваш ход: " << Color::RESET
                 << "Куплено земли=" << Color::NEON_GREEN << input_state.land_for_buy << Color::RESET << "  "
                 << "Продано земли=" << Color::NEON_PURPLE << input_state.land_for_sell << Color::RESET << "  "
-                << "Выдано пшена для еды=" << Color::NEON_CYAN << input_state.wheat_for_food << Color::RESET << "  "
+                << "Выдано пшена для еды=" << Color::NEON_CYAN << input_state.people_to_feed << Color::RESET << "  "
                 << "Выдано пшена для засева=" << Color::NEON_GREEN << input_state.wheat_for_sow << Color::RESET << "\n";
         if (snap->death_from_starvation > 0) {
             confirm << "Куплено метрвых душ=" << Color::NEON_GREEN << input_state.buy_death_souls << Color::RESET <<
@@ -423,6 +428,7 @@ void ConsoleUI::show_round_summary_from_repo() const {
     const GameState *state = snap.get();
 
     constexpr int W = 76;
+
 
     auto center = [](const std::string &s, int w) {
         if (static_cast<int>(s.size()) >= w) return s;
@@ -519,7 +525,7 @@ void ConsoleUI::show_round_summary_from_repo() const {
         o << "  " << Color::NEON_YELLOW << "Предыдущее решение повелителя:" << Color::RESET << "\n";
         o << "    Купить акров: " << Color::NEON_GREEN << last_input_.land_for_buy << Color::RESET << "  ";
         o << "Продать акров: " << Color::NEON_PURPLE << last_input_.land_for_sell << Color::RESET << "\n";
-        o << "    Съесть бушелей: " << Color::NEON_CYAN << last_input_.wheat_for_food << Color::RESET << "  ";
+        o << "    Съесть бушелей: " << Color::NEON_CYAN << last_input_.people_to_feed << Color::RESET << "  ";
         o << "Засеять бушелей: " << Color::NEON_GREEN << last_input_.wheat_for_sow << Color::RESET << "\n";
         typewriter(o.str(), 0);
     }
