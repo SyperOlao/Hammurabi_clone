@@ -216,7 +216,16 @@ bool ConsoleUI::str_to_ll(const std::string &s, long long &out) {
     out = neg ? -val : val;
     return true;
 }
+static inline void drain_line() {
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+}
 
+static inline void reset_stdin() {
+    if (!std::cin.good()) std::cin.clear();
+    if (std::cin.rdbuf()->in_avail() > 0) {
+        drain_line();
+    }
+}
 
 std::string ConsoleUI::prompt_until_valid(const std::string &field_key, const std::string &label,
                                           const Validation &validator, const GameState *state_ptr) {
@@ -231,8 +240,9 @@ std::string ConsoleUI::prompt_until_valid(const std::string &field_key, const st
 
 
         if (!std::getline(std::cin, line)) {
-            line = "0";
             std::cout << "\n";
+            std::cin.clear();
+            line = "0";
         }
         line = trim(line);
         if (line.empty()) line = "0";
@@ -243,12 +253,14 @@ std::string ConsoleUI::prompt_until_valid(const std::string &field_key, const st
             std::cout << Color::NEON_GREEN << "✔ " << Color::RESET
                     << Color::NEON_CYAN << label << Color::RESET
                     << " = " << Color::NEON_GREEN << line << Color::RESET << "\n\n";
+            reset_stdin();
             return line;
         }
         std::cout << Color::ERROR << "✖ Ошибка: " << Color::RESET
                 << Color::NEON_RED << message << Color::RESET << "\n";
         std::this_thread::sleep_for(std::chrono::milliseconds(250));
         std::cout << Color::DIM << "Попробуй ещё раз, но на этот раз внимательнее." << Color::RESET << "\n\n";
+        reset_stdin();
     }
 }
 
