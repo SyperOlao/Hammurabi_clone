@@ -23,8 +23,6 @@ struct GameState {
     int death_for_the_last_round = 0;
     bool plague = false;
     bool inspector = false;
-
-
 };
 
 
